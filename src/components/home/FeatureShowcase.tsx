@@ -62,15 +62,25 @@ const FeatureShowcase: React.FC = () => {
   };
 
   return (
-    <section ref={ref} className="py-20 md:py-32 bg-white dark:bg-black">
-      <div className="max-w-[1400px] mx-auto px-4">
-        <div className="text-left mb-16">
-          <h2 className="text-3xl md:text-4xl font-light text-black dark:text-white mb-6">
-            The Mercedes-Benz Experience
-          </h2>
-          <p className="text-gray-700 dark:text-gray-300 max-w-2xl font-light">
-            Discover what sets Mercedes-Benz apart – a legacy of innovation, craftsmanship, and a commitment to excellence that has defined luxury mobility for generations.
-          </p>
+    <section ref={ref} className="py-24 md:py-32 bg-gray-50 dark:bg-gray-950">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="text-left mb-16 md:mb-20 max-w-3xl">
+          <motion.h2 
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6 }}
+            className="text-5xl md:text-6xl font-light text-black dark:text-white mb-6 tracking-tight uppercase"
+          >
+            The Mercedes-Benz experience
+          </motion.h2>
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="text-gray-600 dark:text-gray-400 text-base font-light leading-relaxed"
+          >
+            Discover what sets Mercedes-Benz apart – a legacy of innovation, craftsmanship, and a commitment to excellence.
+          </motion.p>
         </div>
         
         <motion.div 
@@ -78,17 +88,17 @@ const FeatureShowcase: React.FC = () => {
           variants={containerVariants}
           initial="hidden"
           animate={inView ? "visible" : "hidden"}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12"
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-12 gap-y-16"
         >
           {features.map((feature, index) => (
             <motion.div
               key={index}
               variants={itemVariants}
-              className="border-t border-gray-200 dark:border-gray-800 pt-6"
+              className="border-t border-gray-200 dark:border-gray-800 pt-8"
             >
-              <div className="mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-light text-black dark:text-white mb-3">{feature.title}</h3>
-              <p className="text-gray-700 dark:text-gray-300 font-light">{feature.description}</p>
+              <div className="mb-6">{feature.icon}</div>
+              <h3 className="text-xl font-light text-black dark:text-white mb-4 uppercase tracking-wide">{feature.title}</h3>
+              <p className="text-gray-600 dark:text-gray-400 font-light text-sm leading-relaxed">{feature.description}</p>
             </motion.div>
           ))}
         </motion.div>

@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Add the clip-right-half utility class */
+.md\:clip-right-half {
+  @media (min-width: 768px) {
+    clip-path: polygon(50% 0, 100% 0, 100% 100%, 50% 100%);
+  }
+}
+
+/* Add styles for better positioning of background images */
+.md\:clip-right-half img {
+  @media (min-width: 768px) {
+    object-position: center right;
+  }
+}

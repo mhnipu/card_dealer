@@ -4,6 +4,18 @@ import { Menu, X, ChevronDown, Sun, Moon, Search, User, ShoppingBag } from 'luci
 import { useTheme } from '../../context/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
 
+interface SubNavItem {
+  name: string;
+  path: string;
+}
+
+interface NavItem {
+  name: string;
+  path: string;
+  dropdown?: boolean;
+  subItems?: SubNavItem[];
+}
+
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -29,9 +41,16 @@ const Navbar = () => {
     setIsOpen(false);
   }, [location]);
 
-  const navLinks = [
-    { name: 'Models', path: '/' },
-    { name: 'Electric', path: '/electric' },
+  const navLinks: NavItem[] = [
+    { name: 'Home', path: '/' },
+    { name: 'Vehicles', path: '/vehicles', dropdown: true, subItems: [
+      { name: 'All Vehicles', path: '/vehicles/all' },
+      { name: 'SUVs', path: '/vehicles/suv' },
+      { name: 'Sedans', path: '/vehicles/sedan' },
+      { name: 'Sports Cars', path: '/vehicles/sports' },
+      { name: 'Electric', path: '/vehicles/electric' },
+      { name: 'Compare Models', path: '/vehicles/compare' },
+    ]},
     { name: 'Design', path: '/design' },
     { name: 'Innovation', path: '/innovation' },
     { name: 'Services', path: '/services' },
@@ -92,7 +111,7 @@ const Navbar = () => {
       </div>
 
       {/* Main Navigation */}
-      <div className="max-w-[1400px] mx-auto px-4 md:px-6">
+      <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-12">
         <div className="flex items-center justify-between h-16 md:h-20">
           <Link to="/" className="flex items-center">
             <div className={`flex items-center transition-colors duration-300 ${logoColor}`}>
@@ -105,26 +124,64 @@ const Navbar = () => {
                 <path d="M50 5 L50 95 M5 50 L95 50 M15 15 L85 85 M15 85 L85 15" stroke="currentColor" strokeWidth="2" />
                 <circle cx="50" cy="50" r="20" />
               </svg>
-              <span className="text-xl font-medium tracking-wider">LUXURY MOTORS</span>
+              <span className="text-xl font-extralight tracking-widest">
+                <span className="font-medium">LUXURY</span> MOTORS
+              </span>
             </div>
           </Link>
           
           <div className="hidden lg:flex items-center space-x-8">
             {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                className={`text-sm font-light transition-all duration-300 relative group ${navLinkHoverColor} ${
-                  location.pathname === link.path 
-                    ? activeNavLinkColor
-                    : navLinkColor
-                }`}
-              >
-                {link.name}
-                <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-current transition-all duration-200 ${
-                  location.pathname === link.path ? 'w-full' : 'group-hover:w-full'
-                }`}></span>
-              </Link>
+              <div key={link.name} className="relative group">
+                {link.dropdown ? (
+                  <>
+                    <div 
+                      className={`flex items-center text-sm font-light transition-all duration-300 cursor-pointer ${navLinkHoverColor} ${
+                        location.pathname.startsWith(link.path) 
+                          ? activeNavLinkColor
+                          : navLinkColor
+                      }`}
+                    >
+                      {link.name}
+                      <ChevronDown size={16} className="ml-1" />
+                      <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-current transition-all duration-200 ${
+                        location.pathname.startsWith(link.path) ? 'w-full' : 'group-hover:w-full'
+                      }`}></span>
+                    </div>
+                    <div className="absolute left-0 top-full pt-2 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300">
+                      <div className="bg-white dark:bg-black shadow-lg overflow-hidden min-w-[220px] border border-gray-200 dark:border-gray-800">
+                        {link.subItems?.map((subItem) => (
+                          <Link
+                            key={subItem.name}
+                            to={subItem.path}
+                            className={`block px-4 py-3 text-sm hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors duration-200 ${
+                              location.pathname === subItem.path 
+                                ? 'bg-gray-100 dark:bg-gray-800 font-medium text-black dark:text-white' 
+                                : 'text-gray-700 dark:text-gray-300'
+                            }`}
+                          >
+                            {subItem.name}
+                          </Link>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <Link
+                    to={link.path}
+                    className={`text-sm font-light transition-all duration-300 relative ${navLinkHoverColor} ${
+                      location.pathname === link.path 
+                        ? activeNavLinkColor
+                        : navLinkColor
+                    }`}
+                  >
+                    {link.name}
+                    <span className={`absolute -bottom-1 left-0 w-0 h-0.5 bg-current transition-all duration-200 ${
+                      location.pathname === link.path ? 'w-full' : 'group-hover:w-full'
+                    }`}></span>
+                  </Link>
+                )}
+              </div>
             ))}
           </div>
           
@@ -180,17 +237,48 @@ const Navbar = () => {
             <div className="container mx-auto px-4 py-6 space-y-6">
               <div className="grid grid-cols-1 gap-4">
                 {navLinks.map((link) => (
-                  <Link
-                    key={link.name}
-                    to={link.path}
-                    className={`block py-2 text-base font-light transition-colors duration-300 border-b border-gray-800 ${navLinkHoverColor} ${
-                      location.pathname === link.path 
-                        ? activeNavLinkColor 
-                        : navLinkColor
-                    }`}
-                  >
-                    {link.name}
-                  </Link>
+                  <div key={link.name}>
+                    {link.dropdown ? (
+                      <div>
+                        <div 
+                          className={`flex items-center justify-between py-2 text-base font-light transition-colors duration-300 border-b border-gray-800 ${navLinkHoverColor} ${
+                            location.pathname.startsWith(link.path) 
+                              ? activeNavLinkColor 
+                              : navLinkColor
+                          }`}
+                        >
+                          <Link to={link.path}>{link.name}</Link>
+                          <ChevronDown size={18} />
+                        </div>
+                        <div className="pl-4 mt-2 mb-2 space-y-2">
+                          {link.subItems?.map((subItem) => (
+                            <Link
+                              key={subItem.name}
+                              to={subItem.path}
+                              className={`block py-2 text-sm font-light transition-colors duration-300 ${navLinkHoverColor} ${
+                                location.pathname === subItem.path 
+                                  ? activeNavLinkColor 
+                                  : navLinkColor
+                              }`}
+                            >
+                              {subItem.name}
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <Link
+                        to={link.path}
+                        className={`block py-2 text-base font-light transition-colors duration-300 border-b border-gray-800 ${navLinkHoverColor} ${
+                          location.pathname === link.path 
+                            ? activeNavLinkColor 
+                            : navLinkColor
+                        }`}
+                      >
+                        {link.name}
+                      </Link>
+                    )}
+                  </div>
                 ))}
               </div>
               

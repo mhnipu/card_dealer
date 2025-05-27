@@ -16,29 +16,30 @@ const CategoryCard: React.FC<CategoryCardProps> = ({ id, name, image, index }) =
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5, delay: index * 0.1 }}
-      className="overflow-hidden group"
+      className="overflow-hidden group bg-white dark:bg-black h-full flex flex-col"
     >
-      <Link to={`/categories/${id}`} className="block">
+      <Link to={`/categories/${id}`} className="block h-full flex flex-col">
         <div className="relative h-[350px] overflow-hidden">
           <img 
             src={image} 
             alt={name} 
             className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
-          <div className="absolute bottom-0 left-0 right-0 p-4">
-            <h3 className="text-xl font-light text-white drop-shadow-md">{name}</h3>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-50"></div>
+          <div className="absolute bottom-0 left-0 right-0 p-6">
+            <h3 className="text-white text-3xl font-light uppercase tracking-wide">{name}</h3>
           </div>
         </div>
         
-        <div className="py-4">
-          <div className="flex items-center justify-between">
-            <h3 className="text-xl font-light text-black dark:text-white">{name}</h3>
-            <span className="text-black dark:text-white opacity-0 transform translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
-              <ArrowRight size={20} />
-            </span>
+        <div className="p-6 flex-grow flex flex-col">
+          <p className="text-gray-600 dark:text-gray-400 text-sm leading-relaxed mb-8">
+            Explore our {name.toLowerCase()} collection designed with the perfect blend of performance and luxury.
+          </p>
+          
+          <div className="mt-auto pt-5 border-t border-gray-200 dark:border-gray-800 flex items-center justify-between">
+            <span className="text-sm text-black dark:text-white uppercase tracking-wider">Explore the models</span>
+            <ArrowRight size={16} className="text-black dark:text-white transform group-hover:translate-x-2 transition-transform" />
           </div>
-          <div className="w-0 h-0.5 bg-black dark:bg-white group-hover:w-full transition-all duration-300 mt-2"></div>
         </div>
       </Link>
     </motion.div>
