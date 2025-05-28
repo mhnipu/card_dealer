@@ -283,3 +283,186 @@ export const carsData: Car[] = [
     ]
   }
 ];
+
+// Standardized vehicle data to be used across all components
+export const vehiclesData = [
+  {
+    id: '1',
+    name: 'GT Turismo',
+    category: 'sports',
+    price: 175000,
+    image: 'https://images.unsplash.com/photo-1503736334956-4c8f8e92946d?auto=format&fit=crop&w=800&q=80',
+    features: ['580 HP', '0-60 in 3.2s', '205 mph'],
+    fuelType: 'gas',
+    year: 2023,
+    logo: 'https://www.carlogos.org/logo/Porsche-logo-2008-1920x1080.png'
+  },
+  {
+    id: '2',
+    name: 'E-Motion',
+    category: 'electric',
+    price: 125000,
+    image: 'https://images.unsplash.com/photo-1554744512-d6c603f27c54?auto=format&fit=crop&w=800&q=80',
+    features: ['450 HP', '0-60 in 3.8s', '175 mph'],
+    fuelType: 'electric',
+    year: 2023,
+    logo: 'https://www.carlogos.org/logo/Tesla-logo-2003-2500x2500.png'
+  },
+  {
+    id: '3',
+    name: 'Classica 65',
+    category: 'sports',
+    price: 195000,
+    image: 'https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?auto=format&fit=crop&w=800&q=80',
+    features: ['410 HP', '0-60 in 4.5s', '160 mph'],
+    fuelType: 'gas',
+    year: 2023,
+    logo: 'https://www.carlogos.org/logo/Ferrari-logo-2500x2500.png'
+  },
+  {
+    id: '4',
+    name: 'Terrain X9',
+    category: 'suv',
+    price: 89000,
+    image: 'https://images.unsplash.com/photo-1580273916550-e323be2ae537?auto=format&fit=crop&w=800&q=80',
+    features: ['520 HP', '0-60 in 4.0s', '155 mph'],
+    fuelType: 'hybrid',
+    year: 2023,
+    logo: 'https://www.carlogos.org/logo/Land-Rover-logo-2011-1920x1080.png'
+  },
+  {
+    id: '5',
+    name: 'Spyder RS',
+    category: 'sports',
+    price: 165000,
+    image: 'https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=800&q=80',
+    features: ['610 HP', '0-60 in 2.9s', '210 mph'],
+    fuelType: 'gas',
+    year: 2023,
+    logo: 'https://www.carlogos.org/logo/Lamborghini-logo-1920x1080.png'
+  },
+  {
+    id: '6',
+    name: 'Track Demon',
+    category: 'sports',
+    price: 245000,
+    image: 'https://images.unsplash.com/photo-1542362567-b07e54358753?auto=format&fit=crop&w=800&q=80',
+    features: ['720 HP', '0-60 in 2.7s', '215 mph'],
+    fuelType: 'gas',
+    year: 2023,
+    logo: 'https://www.carlogos.org/logo/Bugatti-logo-1024x768.png'
+  },
+  {
+    id: '7',
+    name: 'S-Class Elite',
+    category: 'sedan',
+    price: 110000,
+    image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=800&q=80',
+    features: ['490 HP', '0-60 in 4.1s', '180 mph'],
+    fuelType: 'hybrid',
+    year: 2023,
+    logo: 'https://www.carlogos.org/logo/Mercedes-Benz-logo-2011-1920x1080.png'
+  },
+  {
+    id: '8',
+    name: 'Vision Concept',
+    category: 'concept',
+    price: 350000,
+    image: 'https://images.unsplash.com/photo-1494905998402-395d579af36f?auto=format&fit=crop&w=800&q=80',
+    features: ['800 HP', '0-60 in 2.4s', '220 mph'],
+    fuelType: 'electric',
+    year: 2024,
+    logo: 'https://www.carlogos.org/logo/BMW-logo-2000-2048x2048.png'
+  },
+  {
+    id: '9',
+    name: 'Urban EV',
+    category: 'electric',
+    price: 45000,
+    image: 'https://images.unsplash.com/photo-1583121274602-3e2820c69888?auto=format&fit=crop&w=800&q=80',
+    features: ['250 HP', '0-60 in 5.8s', '130 mph'],
+    fuelType: 'electric',
+    year: 2023,
+    logo: 'https://www.carlogos.org/logo/Nissan-logo-2012-2560x1440.png'
+  },
+  {
+    id: '10',
+    name: 'G-Force Pro',
+    category: 'suv',
+    price: 135000,
+    image: 'https://images.unsplash.com/photo-1519245659620-e859806a8d3b?auto=format&fit=crop&w=800&q=80',
+    features: ['550 HP', '0-60 in 4.3s', '150 mph'],
+    fuelType: 'gas',
+    year: 2023,
+    logo: 'https://www.carlogos.org/logo/Range-Rover-logo-2010-1920x1080.png'
+  },
+  {
+    id: '11',
+    name: 'Luxury Sedan',
+    category: 'sedan',
+    price: 95000,
+    image: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=800&q=80',
+    features: ['400 HP', '0-60 in 4.7s', '155 mph'],
+    fuelType: 'hybrid',
+    year: 2023,
+    logo: 'https://www.carlogos.org/logo/Lexus-logo-1988-1920x1080.png'
+  },
+  {
+    id: '12',
+    name: 'Executive Plus',
+    category: 'sedan',
+    price: 120000,
+    image: 'https://images.unsplash.com/photo-1550355291-bbee04a92027?auto=format&fit=crop&w=800&q=80',
+    features: ['450 HP', '0-60 in 4.3s', '165 mph'],
+    fuelType: 'gas',
+    year: 2023,
+    logo: 'https://www.carlogos.org/logo/Audi-logo-2009-1920x1080.png'
+  },
+  {
+    id: '13',
+    name: 'i-Concept X',
+    category: 'concept',
+    price: 280000,
+    image: 'https://images.unsplash.com/photo-1617704548623-340376564e68?auto=format&fit=crop&w=800&q=80',
+    features: ['700 HP', '0-60 in 2.8s', '200 mph'],
+    fuelType: 'electric',
+    year: 2024,
+    logo: 'https://www.carlogos.org/logo/Mercedes-Benz-logo-2011-1920x1080.png'
+  },
+  {
+    id: '14',
+    name: 'Futura GT',
+    category: 'concept',
+    price: 320000,
+    image: 'https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?auto=format&fit=crop&w=800&q=80',
+    features: ['750 HP', '0-60 in 2.5s', '210 mph'],
+    fuelType: 'hydrogen',
+    year: 2024,
+    logo: 'https://www.carlogos.org/logo/Audi-logo-2009-1920x1080.png'
+  },
+  {
+    id: '15',
+    name: 'SUV Hybrid X7',
+    category: 'suv',
+    price: 105000,
+    image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80',
+    features: ['480 HP', '0-60 in 4.5s', '145 mph'],
+    fuelType: 'hybrid',
+    year: 2023,
+    logo: 'https://www.carlogos.org/logo/BMW-logo-2000-2048x2048.png'
+  },
+  {
+    id: '16',
+    name: 'EV Crossover',
+    category: 'electric',
+    price: 85000,
+    image: 'https://images.unsplash.com/photo-1593055357429-a166d056bbb1?auto=format&fit=crop&w=800&q=80',
+    features: ['350 HP', '0-60 in 4.8s', '140 mph'],
+    fuelType: 'electric',
+    year: 2023,
+    logo: 'https://www.carlogos.org/logo/Volkswagen-logo-2019-1500x1500.png'
+  }
+];
+
+// Standard categories used across the application
+export const standardCategories = ['all', 'suv', 'sedan', 'sports', 'electric', 'concept'];

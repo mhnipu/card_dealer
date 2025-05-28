@@ -8,16 +8,31 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/effect-coverflow';
-import { carsData, carCategories, Car } from '../../utils/data';
 import { Link, useNavigate } from 'react-router-dom';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { ScrollReveal, Parallax } from '../../context/ScrollAnimationContext';
 import Button from '../common/Button';
+import { vehiclesData, standardCategories } from '../../utils/data';
 
 // Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
+
+// Filter options
+const categories = standardCategories;
+
+// Function to improve image URL quality by adding parameters
+const getHighQualityImageUrl = (url: string): string => {
+  // For Unsplash images, we can add quality and size parameters
+  if (url.includes('unsplash.com')) {
+    // Remove existing auto parameters if present
+    const baseUrl = url.split('?')[0];
+    // Add high quality and appropriate size parameters
+    return `${baseUrl}?q=100&w=1500&fit=crop&auto=format&dpr=2`;
+  }
+  return url;
+};
 
 const FeaturedSlider: React.FC = () => {
   // eslint-disable-next-line
@@ -32,8 +47,8 @@ const FeaturedSlider: React.FC = () => {
   const [showAllModels, setShowAllModels] = useState(false);
   const navigate = useNavigate();
   
-  // Use all available cars from carsData
-  const featured = carsData;
+  // Use all available cars from vehiclesData
+  const featured = vehiclesData;
   
   // Apply scroll animations
   useGSAP(() => {
@@ -117,11 +132,12 @@ const FeaturedSlider: React.FC = () => {
 
   // Get counts of cars by category
   const getCategoryCount = (categoryName: string) => {
-    return carsData.filter(car => car.category.toLowerCase() === categoryName.toLowerCase()).length;
+    if (categoryName === 'All') return vehiclesData.length;
+    return vehiclesData.filter(car => car.category.toLowerCase() === categoryName.toLowerCase()).length;
   };
 
   return (
-    <section id="featured-section" ref={sectionRef} className="py-24 md:py-32 bg-white dark:bg-black relative overflow-hidden">
+    <section id="featured-section" ref={sectionRef} className="py-16 sm:py-20 md:py-24 lg:py-32 bg-white dark:bg-black relative overflow-hidden">
       {/* Decorative elements */}
       <div className="absolute top-1/4 left-12 w-[10%] h-[1px] bg-gray-300 dark:bg-gray-700 hidden md:block"></div>
       <div className="absolute bottom-1/4 right-12 w-[1px] h-[10%] bg-gray-300 dark:bg-gray-700 hidden md:block"></div>
@@ -129,28 +145,28 @@ const FeaturedSlider: React.FC = () => {
       <div className="absolute bottom-1/3 left-[15%] w-[8%] h-[1px] bg-gray-300 dark:bg-gray-700 hidden lg:block"></div>
       
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12">
-        <ScrollReveal animation="fadeUp" className="mb-16 md:mb-20 max-w-3xl">
-          <div className="flex items-center gap-2 mb-4">
+        <ScrollReveal animation="fadeUp" className="mb-10 sm:mb-16 md:mb-20 mx-auto text-center">
+          <div className="flex flex-col items-center justify-center gap-2 mb-4">
             <span className="inline-block w-1 h-8 bg-black dark:bg-white"></span>
-            <h2 className="text-5xl md:text-6xl font-light text-black dark:text-white tracking-tight uppercase reveal-title">
-              Our Premium Models
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-light text-black dark:text-white tracking-tight uppercase reveal-title text-center">
+              Luxury Car Collection
             </h2>
           </div>
-          <p className="text-gray-600 dark:text-gray-400 text-base font-light leading-relaxed reveal-text">
-            Discover our latest vehicles that embody the perfect fusion of luxury, innovation, and performance.
-            Each model represents the pinnacle of automotive engineering and design.
+          <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base font-light leading-relaxed reveal-text max-w-3xl mx-auto">
+            Explore our showcase of premium vehicles featuring advanced technology, exceptional performance, and elegant design. 
+            Each model has been carefully selected to provide an extraordinary driving experience.
           </p>
         </ScrollReveal>
         
         {/* Category tabs */}
-        <div className="mb-12 flex flex-wrap gap-3 border-b border-gray-200 dark:border-gray-800 pb-4">
-          {carCategories.map((category, index) => (
+        <div className="mb-8 sm:mb-12 flex flex-wrap gap-2 sm:gap-3 border-b border-gray-200 dark:border-gray-800 pb-4 overflow-x-auto">
+          {categories.map((category, index) => (
             <button
-              key={category.id}
-              onClick={() => handleCategoryClick(category.id)}
-              className="px-5 py-2 text-sm uppercase tracking-wider transition-all border border-gray-300 dark:border-gray-700 hover:border-black dark:hover:border-white text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white"
+              key={category}
+              onClick={() => handleCategoryClick(category === 'All' ? 'all' : category.toLowerCase())}
+              className="px-3 sm:px-5 py-2 text-xs sm:text-sm uppercase tracking-wider transition-all border border-gray-300 dark:border-gray-700 hover:border-black dark:hover:border-white text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white whitespace-nowrap"
             >
-              {category.name} ({getCategoryCount(category.id)})
+              {category} ({getCategoryCount(category)})
             </button>
           ))}
         </div>
@@ -167,13 +183,13 @@ const FeaturedSlider: React.FC = () => {
               modifier: 1,
               slideShadows: false,
             }}
-            spaceBetween={32}
-            slidesPerView={1}
+            spaceBetween={16}
+            slidesPerView={1.2}
             breakpoints={{
-              640: { slidesPerView: 1.5, centeredSlides: true },
-              768: { slidesPerView: 2, centeredSlides: false },
-              1024: { slidesPerView: 3, centeredSlides: false },
-              1280: { slidesPerView: 3, centeredSlides: false },
+              480: { slidesPerView: 1.5, spaceBetween: 20 },
+              640: { slidesPerView: 2, spaceBetween: 24 },
+              1024: { slidesPerView: 3, spaceBetween: 32 },
+              1280: { slidesPerView: 3, spaceBetween: 32 },
             }}
             pagination={{ 
               clickable: true, 
@@ -184,7 +200,7 @@ const FeaturedSlider: React.FC = () => {
             loop={true}
             autoplay={{ delay: 5000, disableOnInteraction: false }}
             onSlideChange={(swiper) => setActiveIndex(swiper.realIndex)}
-            className="mb-10"
+            className="mb-8 sm:mb-10"
           >
             {featured.map((car, index) => (
               <SwiperSlide key={car.id}>
@@ -193,34 +209,36 @@ const FeaturedSlider: React.FC = () => {
             ))}
           </Swiper>
           
-          <div className="flex flex-col md:flex-row items-center justify-between mt-10">
+          <div className="flex flex-col md:flex-row items-center justify-between mt-6 sm:mt-10">
             <div className="custom-pagination flex items-center mb-6 md:mb-0"></div>
             
             <div className="flex space-x-3">
               <button 
                 onClick={handlePrev}
-                className="w-12 h-12 flex items-center justify-center text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors rounded-full border border-gray-200 dark:border-gray-800"
+                className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors rounded-full border border-gray-200 dark:border-gray-800"
                 aria-label="Previous slide"
               >
-                <ChevronLeft size={20} />
+                <ChevronLeft size={18} className="sm:hidden" />
+                <ChevronLeft size={20} className="hidden sm:block" />
               </button>
               
               <button 
                 onClick={handleNext}
-                className="w-12 h-12 flex items-center justify-center text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors rounded-full border border-gray-200 dark:border-gray-800"
+                className="w-10 h-10 sm:w-12 sm:h-12 flex items-center justify-center text-black dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors rounded-full border border-gray-200 dark:border-gray-800"
                 aria-label="Next slide"
               >
-                <ChevronRight size={20} />
+                <ChevronRight size={18} className="sm:hidden" />
+                <ChevronRight size={20} className="hidden sm:block" />
               </button>
             </div>
           </div>
         </div>
         
-        <div className="mt-16 text-center">
+        <div className="mt-10 sm:mt-16 text-center">
           <Link to="/vehicles/all">
             <Button
               variant="outline"
-              className="px-8 py-3 border-2 border-black dark:border-white text-black dark:text-white uppercase tracking-wider text-sm transition-all hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black font-light mx-auto"
+              className="px-6 sm:px-8 py-3 border-2 border-black dark:border-white text-black dark:text-white uppercase tracking-wider text-sm transition-all hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black font-light mx-auto"
             >
               View All Models
             </Button>
@@ -232,13 +250,23 @@ const FeaturedSlider: React.FC = () => {
 };
 
 interface FeaturedCardProps {
-  car: Car;
+  car: {
+    id: string;
+    name: string;
+    category: string;
+    price: number;
+    image: string;
+    features: string[];
+    fuelType: string;
+    year: number;
+  };
   isActive: boolean;
 }
 
 const FeaturedCard: React.FC<FeaturedCardProps> = ({ car, isActive }) => {
   const navigate = useNavigate();
   const cardRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
   
   // Card-specific animations
   useGSAP(() => {
@@ -262,6 +290,9 @@ const FeaturedCard: React.FC<FeaturedCardProps> = ({ car, isActive }) => {
     });
   }, []);
 
+  // Get high quality image URL
+  const highQualityImage = getHighQualityImageUrl(car.image);
+
   const handleCardClick = () => {
     // Navigate to the specific car details page
     navigate(`/cars/${car.id}`);
@@ -272,6 +303,17 @@ const FeaturedCard: React.FC<FeaturedCardProps> = ({ car, isActive }) => {
     navigate(`/vehicles/${car.category.toLowerCase()}`);
   };
 
+  useEffect(() => {
+    // Apply image loading and decoding optimization
+    if (imageRef.current) {
+      const img = imageRef.current;
+      img.decoding = 'async';
+      if ('loading' in HTMLImageElement.prototype) {
+        img.loading = 'eager';
+      }
+    }
+  }, []);
+
   return (
     <div
       ref={cardRef}
@@ -281,17 +323,30 @@ const FeaturedCard: React.FC<FeaturedCardProps> = ({ car, isActive }) => {
         border border-gray-100 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-600
         hover:translate-y-[-8px]`}
     >
-      <div className="relative h-[320px] overflow-hidden perspective">
+      <div className="relative h-[250px] sm:h-[280px] md:h-[320px] overflow-hidden perspective">
+        <div className="absolute inset-0 w-full h-full bg-gray-100 dark:bg-gray-800"></div>
         <img 
-          src={car.images.main} 
+          ref={imageRef}
+          src={highQualityImage} 
           alt={car.name} 
-          className="car-image w-full h-full object-cover"
+          className="car-image absolute inset-0 w-full h-full object-cover object-center will-change-transform"
+          style={{ 
+            imageRendering: '-webkit-optimize-contrast',
+            backfaceVisibility: 'hidden',
+            transform: 'translateZ(0)',
+            WebkitFontSmoothing: 'antialiased'
+          }}
+          onLoad={(e) => {
+            (e.target as HTMLImageElement).style.opacity = '1';
+          }}
+          width="800"
+          height="600"
         />
         <div className="card-overlay absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-50"></div>
         
         {/* Premium tag for expensive vehicles */}
         {car.price > 120000 && (
-          <div className="absolute top-0 right-0 z-20 bg-white text-black px-6 py-1 text-xs uppercase tracking-wider font-medium">
+          <div className="absolute top-0 right-0 z-20 bg-white text-black px-4 sm:px-6 py-1 text-xs uppercase tracking-wider font-medium">
             Premium
           </div>
         )}
@@ -308,7 +363,7 @@ const FeaturedCard: React.FC<FeaturedCardProps> = ({ car, isActive }) => {
         
         {/* Model year badge */}
         <div className="absolute top-4 right-4 transform group-hover:translate-x-1 transition-transform">
-          <span className="inline-block px-4 py-1 text-xs font-light bg-gray-800/80 text-white uppercase tracking-wider">
+          <span className="inline-block px-3 sm:px-4 py-1 text-xs font-light bg-gray-800/80 text-white uppercase tracking-wider">
             {car.year}
           </span>
         </div>
@@ -319,49 +374,49 @@ const FeaturedCard: React.FC<FeaturedCardProps> = ({ car, isActive }) => {
         <div className="absolute bottom-0 right-0 w-[15%] h-[1px] bg-white/50"></div>
         <div className="absolute bottom-0 right-0 w-[1px] h-[15%] bg-white/50"></div>
         
-        <div className="card-content absolute bottom-0 left-0 right-0 p-6">
-          <h3 className="text-white text-2xl font-light uppercase tracking-wide">{car.name}</h3>
-          <p className="text-white/80 text-sm mt-1">{car.model}</p>
+        <div className="card-content absolute bottom-0 left-0 right-0 p-4 sm:p-6">
+          <h3 className="text-white text-xl sm:text-2xl font-light uppercase tracking-wide">{car.name}</h3>
           <div className="h-[2px] w-12 bg-white mt-3 group-hover:w-24 transition-all duration-700"></div>
         </div>
       </div>
       
-      <div className="p-6 flex-grow flex flex-col">
+      <div className="p-4 sm:p-6 flex-grow flex flex-col">
         <div className="flex justify-between items-center mb-6 border-b border-gray-200 dark:border-gray-800 pb-4">
           <div className="flex flex-col">
             <span className="text-gray-500 dark:text-gray-500 text-xs uppercase tracking-wider mb-1">Price</span>
-            <p className="text-gray-900 dark:text-white text-xl font-light">${car.price.toLocaleString()}</p>
+            <p className="text-gray-900 dark:text-white text-lg sm:text-xl font-light">${car.price.toLocaleString()}</p>
           </div>
           <div className="flex flex-col items-end">
             <span className="text-gray-500 dark:text-gray-500 text-xs uppercase tracking-wider mb-1">Fuel</span>
-            <div className="text-xs bg-gray-900 dark:bg-gray-700 text-white px-3 py-1 rounded">
-              {car.specifications.fuelType}
+            <div className="text-xs bg-gray-900 dark:bg-gray-700 text-white px-2 sm:px-3 py-1 rounded">
+              {car.fuelType}
             </div>
           </div>
         </div>
         
-        <div className="grid grid-cols-2 gap-y-6 gap-x-8 mb-8">
-          <div className="flex items-center gap-2">
-            <Zap size={16} className="text-gray-500 dark:text-gray-400" />
-            <div className="flex flex-col">
-              <span className="text-gray-500 dark:text-gray-500 text-xs uppercase tracking-wider">Power</span>
-              <span className="text-black dark:text-white font-light">{car.specifications.power}</span>
+        <div className="grid grid-cols-2 gap-y-4 sm:gap-y-6 gap-x-4 sm:gap-x-8 mb-6 sm:mb-8">
+          {car.features.slice(0, 2).map((feature, index) => (
+            <div key={index} className="flex items-center gap-2">
+              {index === 0 ? (
+                <Zap size={16} className="text-gray-500 dark:text-gray-400" />
+              ) : (
+                <Clock size={16} className="text-gray-500 dark:text-gray-400" />
+              )}
+              <div className="flex flex-col">
+                <span className="text-gray-500 dark:text-gray-500 text-xs uppercase tracking-wider">
+                  {index === 0 ? 'Power' : 'Acceleration'}
+                </span>
+                <span className="text-black dark:text-white font-light text-sm sm:text-base">{feature}</span>
+              </div>
             </div>
-          </div>
-          <div className="flex items-center gap-2">
-            <Clock size={16} className="text-gray-500 dark:text-gray-400" />
-            <div className="flex flex-col">
-              <span className="text-gray-500 dark:text-gray-500 text-xs uppercase tracking-wider">0-60</span>
-              <span className="text-black dark:text-white font-light">{car.specifications.acceleration}</span>
-            </div>
-          </div>
+          ))}
         </div>
         
-        <div className="mt-auto pt-5 border-t border-gray-200 dark:border-gray-800 flex justify-between items-center">
+        <div className="mt-auto pt-4 sm:pt-5 border-t border-gray-200 dark:border-gray-800 flex justify-between items-center">
           <Link 
             to={`/cars/${car.id}`} 
             onClick={(e) => e.stopPropagation()}
-            className="bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors px-5 py-2 flex items-center group uppercase tracking-wider text-xs"
+            className="bg-black dark:bg-white text-white dark:text-black hover:bg-gray-800 dark:hover:bg-gray-100 transition-colors px-3 sm:px-5 py-2 flex items-center group uppercase tracking-wider text-xs"
           >
             <span>Details</span>
             <ArrowRight size={14} className="ml-2 transform group-hover:translate-x-1 transition-transform" />
@@ -370,7 +425,7 @@ const FeaturedCard: React.FC<FeaturedCardProps> = ({ car, isActive }) => {
           <Link 
             to={`/vehicles/${car.category.toLowerCase()}`} 
             onClick={(e) => e.stopPropagation()}
-            className="border border-black dark:border-white text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/10 transition-colors px-5 py-2 uppercase tracking-wider text-xs"
+            className="border border-black dark:border-white text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/10 transition-colors px-3 sm:px-5 py-2 uppercase tracking-wider text-xs"
           >
             Browse Category
           </Link>

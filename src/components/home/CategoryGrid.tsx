@@ -2,15 +2,15 @@ import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 import { Link, useNavigate } from 'react-router-dom';
-import { carCategories, carsData } from '../../utils/data';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
 import { ScrollReveal, Parallax } from '../../context/ScrollAnimationContext';
 import BlobBackground from './BlobBackground';
 import { use3DTilt, useMagneticEffect } from '../../utils/creative-animations';
-import { ArrowRight, Car, ShieldCheck, Zap } from 'lucide-react';
+import { ArrowRight, Car, ShieldCheck, Zap, Star, BadgeCheck, BarChart3, Activity } from 'lucide-react';
 import Button from '../common/Button';
+import { vehiclesData, standardCategories } from '../../utils/data';
 
 // Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
@@ -22,20 +22,21 @@ const CategoryGrid: React.FC = () => {
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
   const navigate = useNavigate();
   const [hoveredCategory, setHoveredCategory] = useState<string | null>(null);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   
   // Initialize card refs array
   React.useEffect(() => {
-    cardRefs.current = cardRefs.current.slice(0, carCategories.length);
+    cardRefs.current = cardRefs.current.slice(0, 5); // Only using 5 categories
   }, []);
   
-  // Get count of vehicles in each category
+  // Get count of vehicles in each category using the vehiclesData array
   const getCategoryCount = (categoryId: string) => {
-    return carsData.filter(car => car.category === categoryId).length;
+    return vehiclesData.filter(car => car.category.toLowerCase() === categoryId.toLowerCase()).length;
   };
   
-  // Get a sample car from each category for "featured model"
+  // Get a sample car from each category for "featured model" using vehiclesData
   const getFeaturedModelFromCategory = (categoryId: string) => {
-    const categoryCars = carsData.filter(car => car.category === categoryId);
+    const categoryCars = vehiclesData.filter(car => car.category.toLowerCase() === categoryId.toLowerCase());
     return categoryCars.length > 0 ? categoryCars[0] : null;
   };
   
@@ -87,89 +88,146 @@ const CategoryGrid: React.FC = () => {
       }
     );
     
-    // Add hover effects and parallax to the card images
+    // Add hover effects to each card
     cards.forEach((card) => {
-      // Parallax effect on scroll
-      const image = card.querySelector('.category-image');
-      if (image) {
-        gsap.to(image, {
-          y: -20,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: card,
-            start: 'top bottom',
-            end: 'bottom top',
-            scrub: 0.5
-          }
-        });
-      }
+      // Get elements
+      const imageElement = card.querySelector('.category-image');
+      const overlay = card.querySelector('.category-overlay');
+      const content = card.querySelector('.absolute.inset-0.flex');
+      
+      // Hover effects
+      card.addEventListener('mouseenter', () => {
+        gsap.to(overlay, { opacity: 0.3, duration: 0.3 });
+        gsap.to(imageElement, { scale: 1.1, duration: 0.5 });
+        gsap.to(content, { y: -10, duration: 0.3 });
+      });
+      
+      card.addEventListener('mouseleave', () => {
+        gsap.to(overlay, { opacity: 0.5, duration: 0.3 });
+        gsap.to(imageElement, { scale: 1, duration: 0.5 });
+        gsap.to(content, { y: 0, duration: 0.3 });
+      });
+      
+      // Initialize with scaled image
+      gsap.set(imageElement, { scale: 1.05 });
     });
   }, []);
 
-  const handleCategoryClick = (categoryId: string) => {
-    navigate(`/vehicles/${categoryId}`);
+  // Filter buttons update active category locally
+  const handleFilterCategoryClick = (categoryId: string) => {
+    setActiveCategory(categoryId === activeCategory ? null : categoryId);
+  };
+  
+  // Navigate to the Vehicles page with the selected category
+  const navigateToCategoryPage = (categoryId: string) => {
+    // Debug the category
+    console.log('Navigating with category:', categoryId);
+    
+    // Make sure the category matches exactly what's expected in the Vehicles component
+    if (categoryId.toLowerCase() === 'suv') {
+      navigate('/vehicles/suv');
+    } else if (categoryId.toLowerCase() === 'sedan') {
+      navigate('/vehicles/sedan');
+    } else if (categoryId.toLowerCase() === 'sports') {
+      navigate('/vehicles/sports');
+    } else if (categoryId.toLowerCase() === 'electric') {
+      navigate('/vehicles/electric');
+    } else if (categoryId.toLowerCase() === 'concept') {
+      navigate('/vehicles/concept');
+    } else if (categoryId.toLowerCase() === 'all') {
+      navigate('/vehicles/all');
+    } else {
+      navigate(`/vehicles/${categoryId.toLowerCase()}`);
+    }
+  };
+
+  const getCategoryIcon = (categoryId: string) => {
+    switch(categoryId.toLowerCase()) {
+      case 'sedan': return <Car className="text-gray-400" size={18} />;
+      case 'suv': return <ShieldCheck className="text-gray-400" size={18} />;
+      case 'sports': return <Activity className="text-gray-400" size={18} />;
+      case 'convertible': return <Star className="text-gray-400" size={18} />;
+      case 'electric': return <Zap className="text-gray-400" size={18} />;
+      case 'concept': return <BarChart3 className="text-gray-400" size={18} />;
+      default: return <BadgeCheck className="text-gray-400" size={18} />;
+    }
   };
 
   return (
-    <section ref={sectionRef} className="py-24 md:py-32 bg-gray-50 dark:bg-gray-950 relative overflow-hidden">
+    <section ref={sectionRef} className="py-16 sm:py-24 md:py-32 bg-black relative overflow-hidden">
       {/* Animated blob backgrounds */}
-      <div className="absolute inset-0 opacity-50">
-        <BlobBackground color="#2563eb" opacity={0.05} className="left-0 top-0 transform scale-150 translate-x-[-30%] translate-y-[-20%]" />
-        <BlobBackground color="#7c3aed" opacity={0.05} className="right-0 bottom-0 transform scale-150 translate-x-[30%] translate-y-[20%]" />
+      <div className="absolute inset-0 opacity-20 overflow-hidden">
+        <BlobBackground color="#2563eb" opacity={0.15} className="left-0 top-0 transform scale-150 translate-x-[-30%] translate-y-[-20%]" />
+        <BlobBackground color="#3b82f6" opacity={0.1} className="right-0 bottom-0 transform scale-150 translate-x-[30%] translate-y-[20%]" />
       </div>
       
-      {/* Decorative elements */}
-      <div className="absolute top-1/4 right-12 w-[10%] h-[1px] bg-gray-300 dark:bg-gray-700 hidden md:block"></div>
-      <div className="absolute bottom-1/4 left-12 w-[1px] h-[10%] bg-gray-300 dark:bg-gray-700 hidden md:block"></div>
+      {/* Decorative elements - like in Luxury Car Collection */}
+      <div className="absolute top-1/4 left-12 w-[10%] h-[1px] bg-gray-700 hidden md:block"></div>
+      <div className="absolute bottom-1/4 right-12 w-[1px] h-[10%] bg-gray-700 hidden md:block"></div>
+      <div className="absolute top-1/3 right-[15%] w-[1px] h-[15%] bg-gray-700 hidden lg:block"></div>
+      <div className="absolute bottom-1/3 left-[15%] w-[8%] h-[1px] bg-gray-700 hidden lg:block"></div>
       
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-12 relative z-10">
-        <ScrollReveal animation="fadeUp" className="mb-16 md:mb-20 max-w-3xl">
-          <div className="flex items-center gap-2 mb-4">
-            <span className="inline-block w-1 h-8 bg-black dark:bg-white"></span>
-            <h2 className="text-5xl md:text-6xl font-light text-black dark:text-white tracking-tight uppercase reveal-title">
+        <ScrollReveal animation="fadeUp" className="mb-10 sm:mb-16 md:mb-20 mx-auto text-center">
+          <div className="flex flex-col items-center justify-center gap-2 mb-4">
+            <span className="inline-block w-1 h-8 bg-white"></span>
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-light text-white tracking-tight uppercase reveal-title text-center">
               Browse by Category
             </h2>
           </div>
-          <p className="text-gray-600 dark:text-gray-400 text-base font-light leading-relaxed reveal-text">
-            Explore our selection of vehicles by category and discover the perfect match for your driving desires.
-            Each category represents the pinnacle of automotive engineering and design.
+          <p className="text-gray-400 text-sm sm:text-base font-light leading-relaxed reveal-text max-w-3xl mx-auto">
+            Explore our selection of premium vehicles by category and discover the perfect match for your driving desires.
           </p>
-          
-          {/* Category tabs for smaller screens */}
-          <div className="mt-8 flex flex-wrap gap-3 md:hidden">
-            {carCategories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => handleCategoryClick(category.id)}
-                className="px-4 py-2 text-sm uppercase tracking-wider transition-all border border-gray-300 dark:border-gray-700 hover:border-black dark:hover:border-white text-gray-700 dark:text-gray-300 hover:text-black dark:hover:text-white"
-              >
-                {category.name} ({getCategoryCount(category.id)})
-              </button>
-            ))}
-          </div>
         </ScrollReveal>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-          {carCategories.map((category, index) => {
-            const featuredModel = getFeaturedModelFromCategory(category.id);
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6">
+          {/* Display categories */}
+          {['sports', 'suv', 'sedan', 'electric', 'concept'].map((categoryId, index) => {
+            // Get all vehicles for this category
+            const categoryVehicles = vehiclesData.filter(
+              vehicle => vehicle.category.toLowerCase() === categoryId.toLowerCase()
+            );
+            
+            // Get first vehicle as featured
+            const featuredVehicle = categoryVehicles.length > 0 ? categoryVehicles[0] : null;
+            
+            // Get category name (capitalized for display)
+            const categoryName = categoryId === 'suv' ? 'SUV' : 
+                                categoryId.charAt(0).toUpperCase() + categoryId.slice(1);
+            
+            // Get a representative image
+            const categoryImage = featuredVehicle ? featuredVehicle.image : '';
+            
             return (
-              <div 
-                key={category.id}
+              <motion.div 
+                key={categoryId}
                 ref={el => cardRefs.current[index] = el}
                 className="category-card group"
-                onMouseEnter={() => setHoveredCategory(category.id)}
+                onMouseEnter={() => setHoveredCategory(categoryId)}
                 onMouseLeave={() => setHoveredCategory(null)}
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <div className="relative overflow-hidden h-[400px] border border-gray-200 dark:border-gray-800 hover:border-gray-400 dark:hover:border-gray-600 transition-all duration-300 hover:shadow-xl hover:translate-y-[-8px]">
-                  {/* Main image */}
-                  <div className="absolute inset-0 z-0">
+                <div 
+                  className="relative overflow-hidden cursor-pointer h-full min-h-[200px] sm:min-h-[250px] md:min-h-[280px] rounded-sm
+                  border border-gray-800 hover:border-white/60 transition-all duration-300 hover:translate-y-[-8px]"
+                  onClick={() => navigateToCategoryPage(categoryId)}
+                >
+                  <div className="absolute inset-0 w-full h-full">
                     <img 
-                      src={category.image} 
-                      alt={category.name} 
-                      className="category-image absolute inset-0 w-full h-full object-cover transform scale-105 transition-transform duration-700 group-hover:scale-110"
+                      src={categoryImage} 
+                      alt={categoryName} 
+                      className="category-image absolute inset-0 w-full h-full object-cover object-center transform transition-transform duration-700"
+                      style={{ 
+                        imageRendering: '-webkit-optimize-contrast',
+                        backfaceVisibility: 'hidden',
+                        transform: 'translateZ(0)',
+                        WebkitFontSmoothing: 'antialiased'
+                      }}
                     />
                     <div className="category-overlay absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent opacity-50 transition-opacity duration-300"></div>
-                  
+                    
                     {/* Corner accents */}
                     <div className="absolute top-0 left-0 w-[15%] h-[1px] bg-white/50"></div>
                     <div className="absolute top-0 left-0 w-[1px] h-[15%] bg-white/50"></div>
@@ -177,99 +235,26 @@ const CategoryGrid: React.FC = () => {
                     <div className="absolute bottom-0 right-0 w-[1px] h-[15%] bg-white/50"></div>
                   </div>
                   
-                  {/* Category badge */}
-                  <div className="absolute top-4 left-4 z-10">
-                    <span className="inline-block px-4 py-1.5 bg-white/90 text-black text-xs uppercase tracking-wider font-light">
-                      {category.name}
-                    </span>
-                  </div>
-                  
-                  {/* Stats badge */}
-                  <div className="absolute top-4 right-4 z-10">
-                    <span className="inline-block px-4 py-1.5 bg-black/70 text-white text-xs uppercase tracking-wider font-light">
-                      {getCategoryCount(category.id)} Models
-                    </span>
-                  </div>
-                  
-                  {/* Content */}
-                  <div className="absolute inset-x-0 bottom-0 p-6 z-10">
-                    <h3 className="text-white text-3xl font-light uppercase tracking-wide mb-2">{category.name}</h3>
-                    <div className="h-[2px] w-12 bg-white mb-4 group-hover:w-24 transition-all duration-700"></div>
-                    
-                    {featuredModel && hoveredCategory === category.id && (
-                      <motion.div 
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        className="mb-4"
-                      >
-                        <p className="text-white text-sm mb-2">Featured Model:</p>
-                        <p className="text-white/90 font-light text-sm">
-                          {featuredModel.name} {featuredModel.model} - ${featuredModel.price.toLocaleString()}
-                        </p>
-                      </motion.div>
-                    )}
-                    
-                    <div className="flex gap-3 mt-4">
-                      <Link 
-                        to={`/vehicles/${category.id}`}
-                        className="bg-white text-black hover:bg-gray-100 transition-colors px-5 py-2 flex items-center group-hover:pl-6 group-hover:pr-4 uppercase tracking-wider text-xs group"
-                      >
-                        <span>Browse Models</span>
-                        <ArrowRight size={14} className="ml-2 transform group-hover:translate-x-1 transition-transform" />
-                      </Link>
+                  <div className="absolute inset-0 flex flex-col justify-end p-4 sm:p-6 transition-all duration-300">
+                    <h3 className="text-white text-xl sm:text-2xl font-light mb-1 uppercase tracking-wide">{categoryName}</h3>
+                    <div className="flex items-center justify-between">
+                      <span className="text-white/70 text-xs sm:text-sm font-light">{categoryVehicles.length} {categoryVehicles.length === 1 ? 'model' : 'models'}</span>
                       
-                      {featuredModel && (
-                        <Link 
-                          to={`/cars/${featuredModel.id}`}
-                          className="border border-white text-white hover:bg-white/10 transition-colors px-5 py-2 uppercase tracking-wider text-xs"
-                        >
-                          View Featured
-                        </Link>
-                      )}
+                      <div className="inline-block">
+                        <span className="text-white/80 text-xs uppercase tracking-wider font-light group-hover:text-white transition-colors">
+                          View All
+                          <div className="h-[1px] bg-white/40 w-full mt-0.5 transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"></div>
+                        </span>
+                      </div>
                     </div>
                   </div>
+                  
+                  {/* Active indicator */}
+                  <div className="absolute bottom-0 left-0 w-0 h-[2px] bg-white group-hover:w-full transition-all duration-300"></div>
                 </div>
-                
-                {/* Category description and icons - only visible on desktop */}
-                <div className="hidden md:block p-6 bg-white dark:bg-black border border-t-0 border-gray-200 dark:border-gray-800 group-hover:border-gray-400 dark:group-hover:border-gray-600 transition-all duration-300">
-                  <div className="flex gap-4 mb-4">
-                    {category.id === 'sedan' && <Car size={20} className="text-gray-500 dark:text-gray-400" />}
-                    {category.id === 'suv' && <ShieldCheck size={20} className="text-gray-500 dark:text-gray-400" />}
-                    {category.id === 'coupe' && <Zap size={20} className="text-gray-500 dark:text-gray-400" />}
-                    {category.id === 'convertible' && <Car size={20} className="text-gray-500 dark:text-gray-400" />}
-                    {category.id === 'electric' && <Zap size={20} className="text-gray-500 dark:text-gray-400" />}
-                    {category.id === 'amg' && <Zap size={20} className="text-gray-500 dark:text-gray-400" />}
-                    <p className="text-gray-500 dark:text-gray-400 text-sm">
-                      {getCategoryCount(category.id)} vehicles in collection
-                    </p>
-                  </div>
-                  <p className="text-gray-700 dark:text-gray-300 text-sm leading-relaxed mb-4">
-                    Explore our {category.name.toLowerCase()} collection designed with the perfect blend of performance, luxury, and innovation.
-                  </p>
-                  <div className="pt-4 border-t border-gray-200 dark:border-gray-800">
-                    <Link 
-                      to={`/vehicles/${category.id}`}
-                      className="text-sm text-black dark:text-white uppercase tracking-wider flex items-center group"
-                    >
-                      <span>View All {category.name}</span>
-                      <ArrowRight size={16} className="ml-2 transform group-hover:translate-x-2 transition-transform" />
-                    </Link>
-                  </div>
-                </div>
-              </div>
+              </motion.div>
             );
           })}
-        </div>
-        
-        {/* Call to action */}
-        <div className="mt-16 text-center">
-          <Button
-            variant="primary"
-            onClick={() => navigate('/vehicles/all')}
-            className="px-8 py-3 bg-black dark:bg-white text-white dark:text-black uppercase tracking-wider text-sm transition-all hover:bg-gray-800 dark:hover:bg-gray-100 font-light mx-auto"
-          >
-            View All Vehicles
-          </Button>
         </div>
       </div>
     </section>
