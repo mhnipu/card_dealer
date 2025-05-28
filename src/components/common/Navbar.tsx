@@ -187,21 +187,21 @@ const Navbar = () => {
           
           <div className="flex items-center space-x-1 md:space-x-2">
             <button
-              className={`p-2 rounded-full hover:bg-white/10 transition-colors duration-300 ${iconColor}`}
+              className={`p-2 rounded-full hover:bg-white/10 transition-colors duration-300 ${iconColor} z-50`}
               aria-label="Search"
             >
               <Search size={20} />
             </button>
             
             <button
-              className={`p-2 rounded-full hover:bg-white/10 transition-colors duration-300 ${iconColor}`}
+              className={`p-2 rounded-full hover:bg-white/10 transition-colors duration-300 ${iconColor} z-50`}
               aria-label="User account"
             >
               <User size={20} />
             </button>
             
             <button
-              className={`p-2 rounded-full hover:bg-white/10 transition-colors duration-300 ${iconColor}`}
+              className={`p-2 rounded-full hover:bg-white/10 transition-colors duration-300 ${iconColor} z-50`}
               aria-label="Shopping bag"
             >
               <ShoppingBag size={20} />
@@ -209,7 +209,7 @@ const Navbar = () => {
             
             <button
               onClick={toggleTheme}
-              className={`p-2 rounded-full hover:bg-white/10 transition-colors duration-300 ${iconColor}`}
+              className={`p-2 rounded-full hover:bg-white/10 transition-colors duration-300 ${iconColor} z-50`}
               aria-label="Toggle theme"
             >
               {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
@@ -217,7 +217,7 @@ const Navbar = () => {
             
             <button
               onClick={toggleMenu}
-              className={`p-2 rounded-md lg:hidden transition-colors duration-300 ${iconColor}`}
+              className={`p-2 rounded-md lg:hidden transition-colors duration-300 ${iconColor} z-50`}
               aria-label="Toggle menu"
             >
               {isOpen ? <X size={24} /> : <Menu size={24} />}

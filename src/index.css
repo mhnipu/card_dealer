@@ -15,3 +15,30 @@
     object-position: center right;
   }
 }
+
+/* Fix for Samsung devices with bluish gap issues */
+html, body, #root {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  background-color: #000;
+}
+
+/* Ensure content doesn't overflow on mobile */
+.container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+/* Fix for navbar toggle buttons on Samsung devices */
+@media screen and (max-width: 767px) {
+  header button {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    -webkit-font-smoothing: subpixel-antialiased;
+  }
+}

@@ -192,7 +192,7 @@ const Hero: React.FC = () => {
   };
 
   return (
-    <section ref={heroRef} className="relative h-screen bg-black overflow-hidden">
+    <section ref={heroRef} className="relative h-screen bg-black overflow-hidden w-full max-w-[100vw]">
       {/* Interactive Canvas Background */}
       <HeroCanvasBackground />
       

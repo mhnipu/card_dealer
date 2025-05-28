@@ -142,8 +142,8 @@ const HeroCanvasBackground: React.FC = () => {
   return (
     <canvas 
       ref={canvasRef} 
-      className="absolute inset-0 z-0 bg-black"
-      style={{ pointerEvents: 'none' }}
+      className="absolute inset-0 z-0 bg-black w-full max-w-[100vw]"
+      style={{ pointerEvents: 'none', left: 0, right: 0, width: '100%', height: '100%' }}
     />
   );
 };
