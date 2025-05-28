@@ -195,6 +195,15 @@ const Hero: React.FC = () => {
     <section ref={heroRef} className="relative h-screen bg-black overflow-hidden w-full max-w-[100vw]">
       {/* Interactive Canvas Background */}
       <HeroCanvasBackground />
+
+      {/* Diagonal guide lines for luxury aesthetic */}
+      <div className="absolute inset-0 z-5 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-0 w-full h-full">
+          <div className="absolute top-0 left-1/4 w-[1px] h-full bg-white/5 transform -rotate-45"></div>
+          <div className="absolute top-0 left-2/4 w-[1px] h-full bg-white/5 transform -rotate-45"></div>
+          <div className="absolute top-0 left-3/4 w-[1px] h-full bg-white/5 transform -rotate-45"></div>
+        </div>
+      </div>
       
       {/* Dynamic Car Image Background */}
       <div ref={imageRef} className="absolute inset-0 z-10 overflow-hidden">
@@ -208,8 +217,8 @@ const Hero: React.FC = () => {
               scale: idx === currentImageIndex ? 1 : 1.05
             }}
             transition={{ 
-              opacity: { duration: 0.8, ease: "easeInOut" },
-              scale: { duration: 1, ease: "easeOut" }
+              opacity: { duration: 1.2, ease: "easeInOut" },
+              scale: { duration: 1.4, ease: "easeOut" }
             }}
           >
             <img
@@ -220,221 +229,278 @@ const Hero: React.FC = () => {
               width="1920"
               height="1080"
             />
+            
+            {/* Individual image overlay for depth - stronger left-to-right gradient */}
+            <div className="absolute inset-0 bg-gradient-to-r from-black via-black/30 to-transparent"></div>
           </motion.div>
         ))}
-        {/* Enhanced gradient overlay for better text readability with split design */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black/30 z-10 hero-layer-2"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-black/80 to-transparent z-10 hero-layer-2"></div>
         
-        {/* Decorative elements like in Vehicles page */}
-        <div className="absolute top-1/4 right-16 w-[15%] h-[1px] bg-white/40 z-10 hidden md:block"></div>
-        <div className="absolute bottom-1/4 left-12 w-[1px] h-[15%] bg-white/40 z-10 hidden md:block"></div>
+        {/* Enhanced uniform gradient overlay - with stronger left-to-right visibility gradient */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/40 to-transparent z-10 hero-layer-2"></div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-transparent z-10 hero-layer-2"></div>
+        <div className="absolute right-0 top-0 bottom-0 w-1/2 bg-gradient-to-l from-transparent to-transparent z-10 hero-layer-2"></div>
+
+        {/* Premium grid overlay pattern */}
+        <div className="absolute inset-0 grid grid-cols-12 z-10 opacity-10">
+          {Array(12).fill(0).map((_, index) => (
+            <div key={index} className="border-l border-white/10 h-full"></div>
+          ))}
+        </div>
         
-        {/* Corner accents */}
-        <div className="absolute top-12 left-12 w-[8%] h-[1px] bg-white/30 z-10 hidden md:block"></div>
-        <div className="absolute top-12 left-12 w-[1px] h-[8%] bg-white/30 z-10 hidden md:block"></div>
-        <div className="absolute bottom-12 right-16 w-[8%] h-[1px] bg-white/30 z-10 hidden md:block"></div>
-        <div className="absolute bottom-12 right-16 w-[1px] h-[8%] bg-white/30 z-10 hidden md:block"></div>
+        {/* Decorative elements */}
+        <div className="absolute top-[15%] right-16 w-[25%] h-[1px] bg-gradient-to-r from-white/50 to-transparent z-10 hidden md:block"></div>
+        <div className="absolute bottom-[15%] left-12 w-[1px] h-[25%] bg-gradient-to-b from-white/50 to-transparent z-10 hidden md:block"></div>
+        
+        {/* Asymmetric corner accents */}
+        <div className="absolute top-20 left-24 w-[15%] h-[2px] bg-gradient-to-r from-white/40 to-transparent z-10 hidden md:block"></div>
+        <div className="absolute top-20 left-24 w-[2px] h-[15%] bg-gradient-to-b from-white/40 to-transparent z-10 hidden md:block"></div>
+        <div className="absolute bottom-20 right-24 w-[15%] h-[2px] bg-gradient-to-l from-white/40 to-transparent z-10 hidden md:block"></div>
+        <div className="absolute bottom-20 right-24 w-[2px] h-[15%] bg-gradient-to-t from-white/40 to-transparent z-10 hidden md:block"></div>
+        
+        {/* Additional creative design elements */}
+        <div className="absolute top-40 right-[30%] w-[100px] h-[100px] border border-white/10 rounded-full z-10 hidden lg:block"></div>
+        <div className="absolute bottom-60 left-[20%] w-[70px] h-[70px] border border-white/5 rounded-full z-10 hidden lg:block"></div>
+        <div className="absolute bottom-[40%] right-[15%] w-[150px] h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent z-10 hidden lg:block"></div>
+        <div className="absolute top-[35%] left-[10%] flex flex-col gap-1 z-10 hidden lg:block">
+          <div className="w-[40px] h-[1px] bg-white/30"></div>
+          <div className="w-[20px] h-[1px] bg-white/20"></div>
+          <div className="w-[60px] h-[1px] bg-white/10"></div>
+        </div>
       </div>
       
-      {/* Car Model Number Indicator - now matches vehicles page style */}
-      <div ref={indicatorRef} className="absolute top-1/4 right-8 z-30 hidden md:block hero-layer-3">
-        <div className="text-white text-opacity-20 text-[140px] md:text-[240px] font-light leading-none">
+      {/* Dynamic semi-transparent vertical bar */}
+      <div className="absolute left-0 top-0 h-full w-[5px] bg-gradient-to-b from-white/0 via-white/10 to-white/0 z-20 hidden md:block"></div>
+      
+      {/* Car Model Number Indicator - now with parallax effect */}
+      <motion.div 
+        ref={indicatorRef} 
+        className="absolute top-[15%] right-8 z-30 hidden md:block hero-layer-3"
+        initial={{ x: 100, opacity: 0 }}
+        animate={{ x: 0, opacity: 1 }}
+        transition={{ duration: 1, delay: 0.8 }}
+      >
+        <div className="text-white text-opacity-5 text-[180px] md:text-[320px] font-extralight leading-none tracking-tighter">
           {(currentImageIndex + 1).toString().padStart(2, '0')}
         </div>
-      </div>
+      </motion.div>
       
-      {/* Foreground Content - Z-index 30 - Matches vehicles page style */}
-      <div ref={contentRef} className="relative z-30 max-w-[1400px] mx-auto px-4 md:px-6 lg:px-12 h-full flex flex-col justify-end pb-24 md:pb-32">
-        <div className="px-6 md:px-10 lg:px-16 max-w-3xl relative z-50">
-          {/* Main Title moved to bottom left with enhanced visibility */}
-          <div className="relative">
-            <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.1 }}
-              className="relative z-10"
-            >
-              {/* Car Logo */}
-              {currentImage.logo && (
-                <motion.div
-                  initial={{ opacity: 0, y: 30 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
-                  className="mb-2 relative z-10 w-16 sm:w-24 h-16 sm:h-24 flex items-center justify-center"
-                >
-                  <img 
-                    src={currentImage.logo} 
-                    alt={`${currentImage.model} logo`}
-                    className="w-full h-full object-contain"
-                    loading="eager"
-                  />
-                </motion.div>
-              )}
+      
+      
+      {/* Foreground Content - Z-index 30 */}
+      <div ref={contentRef} className="relative z-30 max-w-[1400px] mx-auto px-4 md:px-6 lg:px-0 h-full flex flex-col justify-end pb-28 md:pb-36">
+        {/* Main content with asymmetric layout */}
+        <div className="grid grid-cols-12 relative z-50">
+          {/* Left empty space for asymmetric design */}
+          <div className="hidden lg:block lg:col-span-1"></div>
+          
+          {/* Main content area */}
+          <div className="col-span-12 lg:col-span-8 px-6 md:px-10 lg:px-0">
+            <div className="relative">
+              {/* Vertical accent line */}
+              <div className="absolute top-0 left-0 w-[1px] h-full bg-gradient-to-b from-transparent via-white/30 to-transparent translate-x-[-20px] hidden lg:block"></div>
               
-              {/* Moving title section to the end */}
               <motion.div
                 initial={{ opacity: 0, y: 30 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.3 }}
-                className="mb-2 relative z-10"
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.8, delay: 0.1 }}
+                className="relative z-10"
               >
-                <span 
-                  className="text-white uppercase text-xs sm:text-sm tracking-widest font-light drop-shadow-xl"
+                {/* Car Logo with enhanced presentation - moved above car name */}
+                {currentImage.logo && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.8, delay: 0.2 }}
+                    className="mb-8 relative z-10 flex flex-col items-start"
+                  >
+                    <div className="w-24 sm:w-32 lg:w-40 h-24 sm:h-32 lg:h-40 flex items-center justify-center backdrop-blur-sm bg-gradient-to-r from-black/70 to-transparent p-4 relative">
+                      <img 
+                        src={currentImage.logo} 
+                        alt={`${currentImage.model} logo`}
+                        className="w-full h-full object-contain"
+                        loading="eager"
+                      />
+                      <div className="absolute inset-0 shadow-[inset_0_0_30px_rgba(255,255,255,0.1)]"></div>
+                    </div>
+                    
+                    {/* Car name directly with logo */}
+                    <motion.h2
+                      className="text-3xl sm:text-4xl lg:text-5xl font-extralight text-white mt-4 tracking-wide uppercase relative z-10"
+                      style={{ textShadow: '0 4px 8px rgba(0,0,0,0.5)' }}
+                    >
+                      {currentImage.model}
+                    </motion.h2>
+                    <div className="w-16 md:w-24 h-[2px] bg-gradient-to-r from-white to-white/0 mt-2"></div>
+                  </motion.div>
+                )}
+                
+                {/* Featured model indicator */}
+                <motion.div
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={inView ? { opacity: 1, x: 0 } : {}}
+                  transition={{ duration: 0.8, delay: 0.3 }}
+                  className="mb-4 relative z-10"
+                >
+                  <div className="flex items-center gap-4">
+                    <span className="inline-block w-8 h-[1px] bg-white/70"></span>
+                    <span 
+                      className="text-white uppercase text-xs sm:text-sm tracking-[0.3em] font-light drop-shadow-xl"
+                      style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}
+                    >
+                      Featured Model
+                    </span>
+                  </div>
+                </motion.div>
+                
+                {/* Description with enhanced styling */}
+                <motion.p
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.8, delay: 0.5 }}
+                  className="text-base sm:text-lg md:text-xl text-white mb-8 sm:mb-10 font-light leading-relaxed max-w-2xl drop-shadow-xl relative z-10 pl-0 md:pl-12 border-l-0 md:border-l md:border-white/20"
                   style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}
                 >
-                  Featured Model
-                </span>
-              </motion.div>
-              <motion.h2
-                ref={modelNameRef}
-                initial={{ opacity: 0, y: 30 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.4 }}
-                className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-light text-white leading-tight mb-2 tracking-wide uppercase drop-shadow-xl relative z-10"
-                style={{ textShadow: '0 4px 8px rgba(0,0,0,0.5)' }}
-              >
-                {currentImage.model}
-              </motion.h2>
-              <div className="w-16 h-[2px] bg-white mb-4 relative z-10"></div>
-              <motion.p
-                initial={{ opacity: 0, y: 30 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.5 }}
-                className="text-sm sm:text-base md:text-lg text-white mb-4 sm:mb-6 font-light leading-relaxed max-w-xl drop-shadow-xl relative z-10"
-                style={{ textShadow: '0 2px 4px rgba(0,0,0,0.5)' }}
-              >
-                {currentImage.description}
-              </motion.p>
-              
-              {/* Enhanced gradient overlay only behind text */}
-              <div className="absolute left-0 bottom-0 w-full h-3/4 bg-gradient-to-t from-black/80 via-black/40 to-transparent -z-10"></div>
-              
-              {/* Car Specs - Matches vehicles page style */}
-              <motion.div
-                ref={carSpecsRef}
-                initial={{ opacity: 0, y: 30 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.6 }}
-                className="flex flex-wrap gap-8 mb-8 max-w-md border-t border-white/30 pt-6 relative z-10"
-              >
-                <div className="flex items-center gap-3">
-                  <Zap size={18} className="text-white" />
-                  <div>
-                    <p className="text-white/90 text-xs uppercase tracking-wider">POWER</p>
-                    <p className="text-white font-light">{currentImage.specs.power}</p>
+                  {currentImage.description}
+                </motion.p>
+                
+                {/* Car Specs with modern design */}
+                <motion.div
+                  ref={carSpecsRef}
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.8, delay: 0.6 }}
+                  className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-12 relative z-10"
+                >
+                  <div className="flex flex-col backdrop-blur-sm bg-white/5 p-5 border-b-2 border-white/20">
+                    <div className="flex items-center gap-3 mb-3">
+                      <Zap size={18} className="text-white/90" strokeWidth={1.5} />
+                      <p className="text-white/80 text-xs uppercase tracking-widest">POWER</p>
+                    </div>
+                    <p className="text-white font-light text-2xl">{currentImage.specs.power}</p>
                   </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Clock size={18} className="text-white" />
-                  <div>
-                    <p className="text-white/90 text-xs uppercase tracking-wider">0-60 MPH</p>
-                    <p className="text-white font-light">{currentImage.specs.acceleration}</p>
+                  
+                  <div className="flex flex-col backdrop-blur-sm bg-white/5 p-5 border-b-2 border-white/20">
+                    <div className="flex items-center gap-3 mb-3">
+                      <Clock size={18} className="text-white/90" strokeWidth={1.5} />
+                      <p className="text-white/80 text-xs uppercase tracking-widest">0-60 MPH</p>
+                    </div>
+                    <p className="text-white font-light text-2xl">{currentImage.specs.acceleration}</p>
                   </div>
-                </div>
-                <div className="flex items-center gap-3">
-                  <Gauge size={18} className="text-white" />
-                  <div>
-                    <p className="text-white/90 text-xs uppercase tracking-wider">TOP SPEED</p>
-                    <p className="text-white font-light">{currentImage.specs.topSpeed}</p>
+                  
+                  <div className="flex flex-col backdrop-blur-sm bg-white/5 p-5 border-b-2 border-white/20">
+                    <div className="flex items-center gap-3 mb-3">
+                      <Gauge size={18} className="text-white/90" strokeWidth={1.5} />
+                      <p className="text-white/80 text-xs uppercase tracking-widest">TOP SPEED</p>
+                    </div>
+                    <p className="text-white font-light text-2xl">{currentImage.specs.topSpeed}</p>
                   </div>
-                </div>
+                </motion.div>
+                
+                {/* Call to action buttons with modern design */}
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.8, delay: 0.7 }}
+                  className="flex flex-col sm:flex-row gap-6 relative z-10"
+                >
+                  <div ref={exploreButtonRef} className="relative overflow-hidden group">
+                    <Button 
+                      variant="primary" 
+                      size="lg" 
+                      className="px-12 py-4 border border-white text-white uppercase tracking-[0.2em] text-sm transition-all hover:bg-white hover:text-black font-light shadow-lg"
+                    >
+                      <span className="relative z-10">Explore Models</span>
+                    </Button>
+                    <div className="absolute inset-0 bg-white/10 transform translate-x-[-100%] skew-x-12 transition-transform duration-700 group-hover:translate-x-0"></div>
+                  </div>
+                  
+                  <div ref={designButtonRef} className="relative overflow-hidden group">
+                    <Button 
+                      variant="outline" 
+                      size="lg" 
+                      className="px-12 py-4 bg-white text-black uppercase tracking-[0.2em] text-sm transition-all hover:bg-white/90 font-light shadow-lg"
+                    >
+                      <span className="relative z-10">Design Yours</span>
+                    </Button>
+                    <div className="absolute inset-0 bg-black/10 transform translate-x-[-100%] skew-x-12 transition-transform duration-700 group-hover:translate-x-0"></div>
+                  </div>
+                </motion.div>
               </motion.div>
-              
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={inView ? { opacity: 1, y: 0 } : {}}
-                transition={{ duration: 0.8, delay: 0.7 }}
-                className="flex flex-col sm:flex-row gap-4 relative z-10"
-              >
-                <div ref={exploreButtonRef}>
-                  <Button 
-                    variant="primary" 
-                    size="lg" 
-                    className="px-8 py-3 border border-white text-white uppercase tracking-wider text-sm transition-all hover:bg-white hover:text-black font-light shadow-lg"
-                  >
-                    <span className="relative z-10">Explore Models</span>
-                  </Button>
-                </div>
-                <div ref={designButtonRef}>
-                  <Button 
-                    variant="outline" 
-                    size="lg" 
-                    className="px-8 py-3 bg-white text-black uppercase tracking-wider text-sm transition-all hover:bg-white/90 font-light shadow-lg"
-                  >
-                    <span className="relative z-10">Design Yours</span>
-                  </Button>
-                </div>
-              </motion.div>
-            </motion.div>
+            </div>
+          </div>
+          
+          {/* Right decorative elements for asymmetric design */}
+          <div className="hidden lg:flex lg:col-span-3 flex-col items-end justify-center gap-4">
+            <div className="h-[200px] w-[1px] bg-gradient-to-b from-transparent via-white/30 to-transparent"></div>
+            <div className="w-[30px] h-[30px] border border-white/30 flex items-center justify-center">
+              <div className="w-[15px] h-[15px] bg-white/30"></div>
+            </div>
+            <div className="h-[100px] w-[1px] bg-gradient-to-b from-transparent via-white/20 to-transparent"></div>
           </div>
         </div>
       </div>
       
-      {/* Title Section at Bottom */}
-      <div className="absolute left-0 right-0 bottom-20 z-40">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-12">
-          <div className="px-6 md:px-10 lg:px-16">
-            <div className="flex items-start gap-2 mb-4">
-              <span className="inline-block w-1 h-8 bg-white"></span>
-              <h1 
-                className="text-3xl md:text-5xl font-light uppercase tracking-wide text-white mb-2 drop-shadow-xl"
-                style={{ textShadow: '0 4px 8px rgba(0,0,0,0.5)' }}
-              >
-                {currentImage.model}
-              </h1>
-            </div>
-            <div className="w-24 h-[1px] bg-white/40 mb-4"></div>
-            <div className="flex flex-wrap gap-x-8 gap-y-2 mb-6">
-              <div className="flex items-center gap-2">
-                <span className="text-white/70 text-sm uppercase tracking-wider">Type:</span>
-                <span className="text-white text-sm font-light">{currentImage.alt.split(" ")[1]}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-white/70 text-sm uppercase tracking-wider">Power:</span>
-                <span className="text-white text-sm font-light">{currentImage.specs.power}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-white/70 text-sm uppercase tracking-wider">Top Speed:</span>
-                <span className="text-white text-sm font-light">{currentImage.specs.topSpeed}</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-white/70 text-sm uppercase tracking-wider">0-60 MPH:</span>
-                <span className="text-white text-sm font-light">{currentImage.specs.acceleration}</span>
-              </div>
-            </div>
-          </div>
-        </div>
+      {/* Horizontal bar design element */}
+      <div className="absolute left-0 right-0 bottom-[120px] z-30 hidden lg:flex px-24">
+        <div className="w-full h-[1px] bg-gradient-to-r from-white/0 via-white/20 to-white/0"></div>
       </div>
       
-      {/* Image Navigation - Now matches vehicles page style */}
-      <div className="absolute left-0 right-0 bottom-0 z-40 bg-gradient-to-t from-black/90 via-black/60 to-transparent">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-6 lg:px-12 py-6 flex justify-between items-center">
-          <div className="px-6 md:px-10 lg:px-16 flex items-center space-x-4">
+      {/* Image Navigation with refined design */}
+      <div className="absolute left-0 right-0 bottom-0 z-40">
+        <div className="max-w-[1400px] mx-auto py-8 grid grid-cols-12 backdrop-blur-sm bg-black/20">
+          {/* Left navigation buttons */}
+          <div className="col-span-4 px-6 md:px-10 lg:px-16 flex items-center gap-6">
             <button 
               onClick={goToPrevImage} 
-              className="w-10 h-10 flex items-center justify-center text-white/70 hover:text-white border border-white/20 rounded-full hover:bg-white/10 transition-all"
+              className="w-12 h-12 flex items-center justify-center text-white/70 hover:text-white border border-white/20 rounded-full hover:bg-white/10 transition-all group"
             >
-              <ChevronLeft size={24} />
+              <ChevronLeft size={24} strokeWidth={1.5} className="transition-transform duration-300 transform group-hover:translate-x-[-3px]" />
             </button>
             <button 
               onClick={goToNextImage} 
-              className="w-10 h-10 flex items-center justify-center text-white/70 hover:text-white border border-white/20 rounded-full hover:bg-white/10 transition-all"
+              className="w-12 h-12 flex items-center justify-center text-white/70 hover:text-white border border-white/20 rounded-full hover:bg-white/10 transition-all group"
             >
-              <ChevronRight size={24} />
+              <ChevronRight size={24} strokeWidth={1.5} className="transition-transform duration-300 transform group-hover:translate-x-[3px]" />
             </button>
-          </div>
-          
-          <div ref={scrollDownRef} className="cursor-pointer text-white/70 hover:text-white" onClick={scrollToContent}>
-            <div className="flex flex-col items-center">
-              <span className="text-xs uppercase tracking-wider mb-2">Scroll</span>
-              <ChevronDown size={18} />
+            <div className="hidden md:flex items-center gap-3">
+              <span className="w-6 h-[1px] bg-white/40"></span>
+              <div className="uppercase text-xs text-white/70 tracking-wider">
+                {currentImageIndex + 1}/{carImages.length}
+              </div>
             </div>
           </div>
           
-          <div className="hidden md:block text-right pr-6 md:pr-10 lg:pr-16">
-            <p className="text-white/70 text-xs uppercase tracking-wider mb-1">Next Model</p>
-            <p className="text-white text-sm font-medium">{nextImage.model}</p>
+          {/* Center scroll indicator */}
+          <div className="col-span-4 flex justify-center">
+            <div ref={scrollDownRef} className="cursor-pointer text-white/70 hover:text-white group" onClick={scrollToContent}>
+              <div className="flex flex-col items-center">
+                <span className="text-xs uppercase tracking-[0.2em] mb-2">Discover</span>
+                <div className="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center group-hover:border-white/40 transition-all">
+                  <ChevronDown size={16} strokeWidth={1.5} className="transition-transform duration-300 group-hover:translate-y-[2px]" />
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          {/* Right next model preview */}
+          <div className="col-span-4 hidden md:flex justify-end items-center pr-6 md:pr-10 lg:pr-16">
+            <div className="flex items-center gap-4">
+              <div className="text-right">
+                <p className="text-white/70 text-xs uppercase tracking-[0.15em] mb-1">Next Model</p>
+                <p className="text-white text-sm font-medium tracking-wider">{nextImage.model}</p>
+              </div>
+              <div className="w-12 h-12 rounded-full overflow-hidden border border-white/30">
+                {nextImage.logo ? (
+                  <img 
+                    src={nextImage.logo}
+                    alt={nextImage.model}
+                    className="w-full h-full object-contain p-2"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-white/10"></div>
+                )}
+              </div>
+            </div>
           </div>
         </div>
       </div>

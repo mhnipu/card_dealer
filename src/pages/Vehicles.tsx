@@ -38,7 +38,11 @@ const VehiclesPage: React.FC = () => {
   
   // Handle vehicle card click to navigate to details
   const handleVehicleClick = (vehicleId: string) => {
-    navigate(`/cars/${vehicleId}`);
+    console.log("Navigating to vehicle details:", vehicleId);
+    // Use setTimeout to ensure the navigation happens after the current event loop
+    setTimeout(() => {
+      navigate(`/cars/${vehicleId}`);
+    }, 0);
   };
   
   // Scroll to top when route changes
@@ -161,9 +165,9 @@ const VehiclesPage: React.FC = () => {
   });
   
   return (
-    <div className="bg-black text-white min-h-screen">
+    <div className="bg-white dark:bg-black text-black dark:text-white min-h-screen">
       {/* Hero section with vehicle background */}
-      <section className="relative h-[60vh] sm:h-[70vh] md:h-[80vh] overflow-hidden mb-6 sm:mb-10">
+      <section className="relative h-[60vh] sm:h-[70vh] md:h-[80vh] overflow-hidden mb-6 sm:mb-10 bg-black">
         {/* Dynamic background with selected category's vehicle - only visible on right side */}
         <div className="absolute inset-0 w-full h-full">
           <div className="md:clip-right-half absolute inset-0">
@@ -174,10 +178,10 @@ const VehiclesPage: React.FC = () => {
           </div>
         </div>
         
-        {/* Clean vertical split line */}
-        <div className="hidden md:block absolute top-0 bottom-0 left-1/2 w-[1px] bg-white/10 z-30"></div>
+        {/* Dark overlay for the right side */}
+        <div className="hidden md:block absolute inset-0 right-0 left-1/2 bg-black/15 z-20"></div>
         
-        <div className="container mx-auto h-full relative z-10 px-0">
+        <div className="max-w-[1400px] mx-auto h-full relative z-10 px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row h-full">
             {/* Left side - Text content with full black background */}
             <div className="w-full md:w-1/2 h-full bg-black relative z-20">
@@ -231,10 +235,10 @@ const VehiclesPage: React.FC = () => {
               </div>
             </div>
             
-            {/* Right side - Only showing background */}
+            {/* Right side - Dark overlay on background */}
             <div className="hidden md:block w-1/2 h-full relative">
               {/* Left edge shadow */}
-              <div className="absolute top-0 left-0 h-full w-8 bg-gradient-to-r from-black/40 to-transparent z-10"></div>
+              <div className="absolute top-0 left-0 h-full w-8 bg-gradient-to-r from-black/50 to-transparent z-10"></div>
               
               {/* Decorative elements */}
               <div className="absolute top-1/4 left-16 w-[15%] h-[1px] bg-white/40 z-10"></div>
@@ -251,32 +255,36 @@ const VehiclesPage: React.FC = () => {
       </section>
 
       {/* Visual Divider - reduced margin */}
-      <div className="container mx-auto px-4 my-8">
-        <div className="w-full h-px bg-gray-800"></div>
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 my-8">
+        <div className="w-full h-px bg-gray-200 dark:bg-gray-800"></div>
       </div>
 
       {/* Main content */}
-      <div className="bg-black pb-20 relative">
+      <div className="bg-white dark:bg-black pb-20 relative">
         {/* Subtle overlays */}
         <div className="absolute inset-0 opacity-10 overflow-hidden">
-          <div className="absolute top-0 right-[10%] w-[1px] h-[70%] bg-white"></div>
-          <div className="absolute bottom-0 left-[10%] w-[1px] h-[40%] bg-white"></div>
+          <div className="absolute top-0 right-[10%] w-[1px] h-[70%] bg-black dark:bg-white"></div>
+          <div className="absolute bottom-0 left-[10%] w-[1px] h-[40%] bg-black dark:bg-white"></div>
         </div>
         
-        <div className="container mx-auto px-4 relative z-10">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           {/* Category Browser */}
           <div className="mb-20">
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-10">
               <div>
-                <h2 className="text-2xl text-white font-light uppercase tracking-wider mb-2">Models</h2>
-                <div className="w-12 h-[2px] bg-white"></div>
-              </div>
-              <div className="text-gray-500 text-sm uppercase tracking-wider">
-                {filteredVehicles.length} vehicles
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="inline-block w-1 h-6 sm:h-8 bg-black dark:bg-white"></span>
+                  <h2 className="text-2xl sm:text-3xl font-light text-black dark:text-white uppercase tracking-wider">
+                    Models
+                  </h2>
+                </div>
+                <p className="text-gray-600 dark:text-gray-400 uppercase tracking-wider text-xs sm:text-sm ml-9">
+                  {filteredVehicles.length} vehicles
+                </p>
               </div>
             </div>
             
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 md:gap-6">
               {/* Category cards using our new component */}
               {categories.map((category) => (
                 <CategoryCard
@@ -301,30 +309,30 @@ const VehiclesPage: React.FC = () => {
           </div>
           
           {/* Search and advanced filters */}
-          <div className="mb-10 sm:mb-16 bg-black p-4 sm:p-8 border border-gray-800 shadow-sm">
+          <div className="mb-10 sm:mb-20 bg-white dark:bg-black p-6 sm:p-8 border border-gray-200 dark:border-gray-800 shadow-sm">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 sm:gap-6 mb-6 sm:mb-8">
               <div className="relative flex-1 w-full">
-                <h2 className="text-lg sm:text-xl text-white uppercase tracking-wider mb-4 sm:mb-5 flex items-center">
-                  <span className="w-8 sm:w-10 h-8 sm:h-10 border border-white/30 flex items-center justify-center mr-3">
-                    <Search className="text-white" size={16} />
+                <h2 className="text-lg sm:text-xl text-black dark:text-white uppercase tracking-wider mb-4 sm:mb-5 flex items-center">
+                  <span className="w-8 sm:w-10 h-8 sm:h-10 border border-gray-300 dark:border-white/30 flex items-center justify-center mr-3">
+                    <Search className="text-black dark:text-white" size={16} />
                   </span>
                   Find Your Perfect Vehicle
                 </h2>
                 <div className="relative">
-                  <Search className="absolute left-3 sm:left-5 top-1/2 transform -translate-y-1/2 text-white/70" size={18} />
+                  <Search className="absolute left-3 sm:left-5 top-1/2 transform -translate-y-1/2 text-black/70 dark:text-white/70" size={18} />
                   <input
                     type="text"
                     placeholder="Search by model, feature or keyword..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 sm:pl-14 pr-4 py-3 sm:py-4 border border-gray-700 bg-gray-900 text-white text-sm focus:outline-none focus:border-white transition-colors"
+                    className="w-full pl-10 sm:pl-14 pr-4 py-3 sm:py-4 border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 text-black dark:text-white text-sm focus:outline-none focus:border-black dark:focus:border-white transition-colors"
                   />
                 </div>
               </div>
               
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="bg-white text-black hover:bg-gray-100 transition-colors uppercase tracking-wider text-xs sm:text-sm font-light flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 mt-2 md:mt-8 w-full md:w-auto justify-center"
+                className="bg-black text-white dark:bg-white dark:text-black hover:bg-gray-900 dark:hover:bg-gray-100 transition-colors uppercase tracking-wider text-xs sm:text-sm font-light flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 mt-2 md:mt-8 w-full md:w-auto justify-center"
               >
                 <SlidersHorizontal size={16} className="sm:hidden" />
                 <SlidersHorizontal size={18} className="hidden sm:block" />
@@ -339,18 +347,18 @@ const VehiclesPage: React.FC = () => {
                 initial={{ height: 0, opacity: 0 }}
                 animate={{ height: 'auto', opacity: 1 }}
                 exit={{ height: 0, opacity: 0 }}
-                className="pt-4 sm:pt-6 border-t border-gray-700"
+                className="pt-4 sm:pt-6 border-t border-gray-200 dark:border-gray-700"
               >
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
                   {/* Fuel Type Filter */}
-                  <div className="bg-gray-900 border border-gray-800 p-4 sm:p-6">
+                  <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-4 sm:p-6">
                     <div className="flex items-center mb-4">
-                      <div className="w-6 sm:w-8 h-6 sm:h-8 border border-white/30 flex items-center justify-center mr-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 sm:h-4 w-3 sm:w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <div className="w-6 sm:w-8 h-6 sm:h-8 border border-gray-300 dark:border-white/30 flex items-center justify-center mr-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 sm:h-4 w-3 sm:w-4 text-black dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                         </svg>
                       </div>
-                      <label className="text-sm sm:text-base font-light text-white uppercase tracking-wider">Fuel Type</label>
+                      <label className="text-sm sm:text-base font-light text-black dark:text-white uppercase tracking-wider">Fuel Type</label>
                     </div>
                     
                     <div className="flex flex-wrap gap-2">
@@ -360,8 +368,8 @@ const VehiclesPage: React.FC = () => {
                           onClick={() => setSelectedFuelType(type)}
                           className={`px-3 sm:px-4 py-1.5 sm:py-2 text-xs uppercase tracking-wider transition-all ${
                             selectedFuelType === type
-                              ? 'bg-white text-black font-medium'
-                              : 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-700'
+                              ? 'bg-black text-white dark:bg-white dark:text-black font-medium'
+                              : 'bg-gray-100 text-black dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
                           }`}
                         >
                           {type}
@@ -371,14 +379,14 @@ const VehiclesPage: React.FC = () => {
                   </div>
                   
                   {/* Year Filter */}
-                  <div className="bg-gray-900 border border-gray-800 p-4 sm:p-6">
+                  <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-4 sm:p-6">
                     <div className="flex items-center mb-4">
-                      <div className="w-6 sm:w-8 h-6 sm:h-8 border border-white/30 flex items-center justify-center mr-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 sm:h-4 w-3 sm:w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <div className="w-6 sm:w-8 h-6 sm:h-8 border border-gray-300 dark:border-white/30 flex items-center justify-center mr-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 sm:h-4 w-3 sm:w-4 text-black dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                         </svg>
                       </div>
-                      <label className="text-sm sm:text-base font-light text-white uppercase tracking-wider">Model Year</label>
+                      <label className="text-sm sm:text-base font-light text-black dark:text-white uppercase tracking-wider">Model Year</label>
                     </div>
                     
                     <div className="flex flex-wrap gap-2">
@@ -388,8 +396,8 @@ const VehiclesPage: React.FC = () => {
                           onClick={() => setSelectedYear(year)}
                           className={`px-3 sm:px-4 py-1.5 sm:py-2 text-xs uppercase tracking-wider transition-all ${
                             selectedYear === year
-                              ? 'bg-white text-black font-medium'
-                              : 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-700'
+                              ? 'bg-black text-white dark:bg-white dark:text-black font-medium'
+                              : 'bg-gray-100 text-black dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
                           }`}
                         >
                           {year}
@@ -399,14 +407,14 @@ const VehiclesPage: React.FC = () => {
                   </div>
                   
                   {/* Price Range Filter */}
-                  <div className="bg-gray-900 border border-gray-800 p-4 sm:p-6">
+                  <div className="bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-800 p-4 sm:p-6">
                     <div className="flex items-center mb-4">
-                      <div className="w-6 sm:w-8 h-6 sm:h-8 border border-white/30 flex items-center justify-center mr-3">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 sm:h-4 w-3 sm:w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <div className="w-6 sm:w-8 h-6 sm:h-8 border border-gray-300 dark:border-white/30 flex items-center justify-center mr-3">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-3 sm:h-4 w-3 sm:w-4 text-black dark:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                         </svg>
                       </div>
-                      <label className="text-sm sm:text-base font-light text-white uppercase tracking-wider">Price Range</label>
+                      <label className="text-sm sm:text-base font-light text-black dark:text-white uppercase tracking-wider">Price Range</label>
                     </div>
                     
                     <div className="flex flex-wrap gap-2">
@@ -416,8 +424,8 @@ const VehiclesPage: React.FC = () => {
                           onClick={() => setSelectedPriceRange(range)}
                           className={`px-3 sm:px-4 py-1.5 sm:py-2 text-xs uppercase tracking-wider transition-all ${
                             selectedPriceRange.label === range.label
-                              ? 'bg-white text-black font-medium'
-                              : 'bg-gray-800 text-white hover:bg-gray-700 border border-gray-700'
+                              ? 'bg-black text-white dark:bg-white dark:text-black font-medium'
+                              : 'bg-gray-100 text-black dark:bg-gray-800 dark:text-white hover:bg-gray-200 dark:hover:bg-gray-700 border border-gray-200 dark:border-gray-700'
                           }`}
                         >
                           {range.label}
@@ -436,13 +444,13 @@ const VehiclesPage: React.FC = () => {
                       setSelectedYear('All');
                       setSelectedPriceRange(priceRanges[0]);
                     }}
-                    className="border border-white text-white hover:bg-white/10 transition-colors px-4 sm:px-6 py-2 uppercase text-xs tracking-wider mr-3"
+                    className="border border-black dark:border-white text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/10 transition-colors px-4 sm:px-6 py-2 uppercase text-xs tracking-wider mr-3"
                   >
                     Reset All
                   </button>
                   <button 
                     onClick={() => setShowFilters(false)}
-                    className="bg-white text-black hover:bg-gray-100 transition-colors px-4 sm:px-6 py-2 uppercase text-xs tracking-wider"
+                    className="bg-black text-white dark:bg-white dark:text-black hover:bg-gray-900 dark:hover:bg-gray-100 transition-colors px-4 sm:px-6 py-2 uppercase text-xs tracking-wider"
                   >
                     Apply Filters
                   </button>
@@ -452,25 +460,25 @@ const VehiclesPage: React.FC = () => {
           </div>
           
           {/* Results summary - Dark Mercedes style */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 sm:mb-12 border-b border-gray-700 pb-4 sm:pb-6">
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-10 sm:mb-14 border-b border-gray-200 dark:border-gray-700 pb-6 sm:pb-8">
             <div>
               <div className="flex items-center gap-2 mb-2">
-                <span className="inline-block w-1 h-6 sm:h-8 bg-white"></span>
-                <h2 className="text-2xl sm:text-3xl font-light text-white uppercase tracking-wider">
+                <span className="inline-block w-1 h-6 sm:h-8 bg-black dark:bg-white"></span>
+                <h2 className="text-2xl sm:text-3xl font-light text-black dark:text-white uppercase tracking-wider">
                   {selectedCategory !== 'all' ? formatCategoryName(selectedCategory) : 'All'}{' '}
-                  <span className="text-white">Models</span>
+                  <span className="text-black dark:text-white">Models</span>
                 </h2>
               </div>
-              <p className="text-gray-400 uppercase tracking-wider text-xs sm:text-sm">
+              <p className="text-gray-600 dark:text-gray-400 uppercase tracking-wider text-xs sm:text-sm ml-9">
                 {filteredVehicles.length} {filteredVehicles.length === 1 ? 'model' : 'models'} available
               </p>
             </div>
             
             <div className="flex items-center gap-4 mt-4 md:mt-0">
-              <span className="text-xs sm:text-sm text-gray-400 uppercase tracking-wider">
+              <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 uppercase tracking-wider">
                 Sort by:
               </span>
-              <select className="bg-black border border-gray-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 uppercase text-xs tracking-wider focus:border-white focus:outline-none">
+              <select className="bg-white dark:bg-black border border-gray-200 dark:border-gray-700 text-black dark:text-white px-3 sm:px-4 py-1.5 sm:py-2 uppercase text-xs tracking-wider focus:border-black dark:focus:border-white focus:outline-none">
                 <option>Price: Low to High</option>
                 <option>Price: High to Low</option>
                 <option>Newest Models</option>
@@ -480,8 +488,7 @@ const VehiclesPage: React.FC = () => {
           </div>
           
           {/* Vehicle grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10">
-            {console.log('Rendering grid with vehicles:', filteredVehicles)}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 lg:gap-10">
             {filteredVehicles.length > 0 ? (
               filteredVehicles.map((vehicle, index) => (
                 <motion.div
@@ -491,12 +498,11 @@ const VehiclesPage: React.FC = () => {
                   animate={inView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   onClick={() => handleVehicleClick(vehicle.id)}
-                  className="bg-black overflow-hidden transition-all duration-500 group border border-gray-800 hover:border-white/50 hover:translate-y-[-8px] cursor-pointer"
+                  className="bg-white dark:bg-black overflow-hidden transition-all duration-500 group border border-gray-200 dark:border-gray-800 hover:border-gray-400 dark:hover:border-white/50 hover:translate-y-[-8px] cursor-pointer"
                 >
-                  {console.log('Rendering vehicle:', vehicle)}
                   {/* Premium tag for expensive vehicles */}
                   {vehicle.price > 150000 && (
-                    <div className="absolute top-0 right-0 z-20 bg-white text-black px-3 sm:px-6 py-1 text-xs uppercase tracking-wider font-medium">
+                    <div className="absolute top-0 right-0 z-20 bg-black dark:bg-white text-white dark:text-black px-3 sm:px-6 py-1 text-xs uppercase tracking-wider font-medium">
                       Premium
                     </div>
                   )}
@@ -563,16 +569,16 @@ const VehiclesPage: React.FC = () => {
                   
                   <div className="p-4 sm:p-6">
                     {/* Price and fuel type */}
-                    <div className="flex justify-between items-center mb-4 sm:mb-6 border-b border-gray-700 pb-4 sm:pb-6">
+                    <div className="flex justify-between items-center mb-4 sm:mb-6 border-b border-gray-200 dark:border-gray-700 pb-4 sm:pb-6">
                       <div className="flex flex-col">
-                        <span className="text-gray-400 text-xs uppercase tracking-wider mb-1">Price</span>
-                        <div className="text-white text-lg sm:text-2xl font-light">
+                        <span className="text-gray-600 dark:text-gray-400 text-xs uppercase tracking-wider mb-1">Price</span>
+                        <div className="text-black dark:text-white text-lg sm:text-2xl font-light">
                           ${vehicle.price.toLocaleString()}
                         </div>
                       </div>
                       <div className="flex flex-col items-end">
-                        <span className="text-gray-400 text-xs uppercase tracking-wider mb-1">Powertrain</span>
-                        <div className="text-xs text-black px-2 sm:px-4 py-1 sm:py-1.5 bg-white font-light uppercase tracking-wider">
+                        <span className="text-gray-600 dark:text-gray-400 text-xs uppercase tracking-wider mb-1">Powertrain</span>
+                        <div className="text-xs text-white dark:text-black px-2 sm:px-4 py-1 sm:py-1.5 bg-black dark:bg-white font-light uppercase tracking-wider">
                           {vehicle.fuelType}
                         </div>
                       </div>
@@ -580,15 +586,15 @@ const VehiclesPage: React.FC = () => {
                     
                     {/* Key features */}
                     <div className="mb-4 sm:mb-6">
-                      <h4 className="text-gray-300 text-xs font-light mb-2 sm:mb-3 uppercase tracking-wider flex items-center">
-                        <span className="inline-block w-4 h-[1px] bg-white mr-2"></span>
+                      <h4 className="text-gray-700 dark:text-gray-300 text-xs font-light mb-2 sm:mb-3 uppercase tracking-wider flex items-center">
+                        <span className="inline-block w-4 h-[1px] bg-black dark:bg-white mr-2"></span>
                         Technical Specifications
                       </h4>
                       <div className="flex flex-wrap gap-2">
                         {vehicle.features.map((feature, i) => (
                           <span 
                             key={i} 
-                            className="inline-block px-2 sm:px-3 py-1 sm:py-1.5 text-xs bg-gray-800 text-gray-300 uppercase tracking-wider"
+                            className="inline-block px-2 sm:px-3 py-1 sm:py-1.5 text-xs bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 uppercase tracking-wider"
                           >
                             {feature}
                           </span>
@@ -603,7 +609,7 @@ const VehiclesPage: React.FC = () => {
                           e.stopPropagation();
                           handleVehicleClick(vehicle.id);
                         }} 
-                        className="bg-white text-black hover:bg-gray-100 transition-colors px-3 sm:px-5 py-2 flex items-center group uppercase tracking-wider text-xs"
+                        className="bg-black text-white dark:bg-white dark:text-black hover:bg-gray-900 dark:hover:bg-gray-100 transition-colors px-3 sm:px-5 py-2 flex items-center group uppercase tracking-wider text-xs"
                       >
                         <span>Details</span>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 ml-2 transform group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -615,7 +621,7 @@ const VehiclesPage: React.FC = () => {
                           e.stopPropagation();
                           handleVehicleClick(vehicle.id);
                         }} 
-                        className="border border-white text-white hover:bg-white/10 transition-colors px-3 sm:px-5 py-2 uppercase tracking-wider text-xs"
+                        className="border border-black dark:border-white text-black dark:text-white hover:bg-black/10 dark:hover:bg-white/10 transition-colors px-3 sm:px-5 py-2 uppercase tracking-wider text-xs"
                       >
                         Configure
                       </button>
@@ -624,13 +630,13 @@ const VehiclesPage: React.FC = () => {
                 </motion.div>
               ))
             ) : (
-              <div className="col-span-full flex flex-col items-center justify-center py-16 sm:py-24 text-center bg-black border border-gray-700">
-                <div className="w-12 sm:w-16 h-12 sm:h-16 border border-white/30 flex items-center justify-center mb-6 sm:mb-8">
-                  <Filter size={20} className="text-white sm:hidden" />
-                  <Filter size={24} className="text-white hidden sm:block" />
+              <div className="col-span-full flex flex-col items-center justify-center py-16 sm:py-24 text-center bg-white dark:bg-black border border-gray-200 dark:border-gray-700">
+                <div className="w-12 sm:w-16 h-12 sm:h-16 border border-gray-300 dark:border-white/30 flex items-center justify-center mb-6 sm:mb-8">
+                  <Filter size={20} className="text-black dark:text-white sm:hidden" />
+                  <Filter size={24} className="text-black dark:text-white hidden sm:block" />
                 </div>
-                <h3 className="text-2xl sm:text-3xl text-white mb-3 sm:mb-4 font-light uppercase tracking-wider">No Models Found</h3>
-                <p className="text-gray-400 max-w-md mb-6 sm:mb-8 px-4 text-sm sm:text-base">
+                <h3 className="text-2xl sm:text-3xl text-black dark:text-white mb-3 sm:mb-4 font-light uppercase tracking-wider">No Models Found</h3>
+                <p className="text-gray-600 dark:text-gray-400 max-w-md mb-6 sm:mb-8 px-4 text-sm sm:text-base">
                   We couldn't find any vehicles matching your current filters. Try adjusting your search criteria or browse our complete collection.
                 </p>
                 <button 
@@ -641,7 +647,7 @@ const VehiclesPage: React.FC = () => {
                     setSelectedYear('All');
                     setSelectedPriceRange(priceRanges[0]);
                   }}
-                  className="bg-white text-black hover:bg-gray-100 transition-colors px-6 sm:px-8 py-2 sm:py-3 uppercase tracking-wider text-xs flex items-center"
+                  className="bg-black text-white hover:bg-gray-800 transition-colors px-6 sm:px-8 py-2 sm:py-3 uppercase tracking-wider text-xs flex items-center"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-3 sm:h-4 w-3 sm:w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />

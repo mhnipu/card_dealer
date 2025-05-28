@@ -125,44 +125,53 @@ const TestimonialSection: React.FC = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-24 md:py-32 bg-white dark:bg-black">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+    <section ref={sectionRef} className="py-24 md:py-32 bg-white dark:bg-black text-black dark:text-white">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative">
+        {/* Subtle overlays */}
+        <div className="absolute inset-0 opacity-10 overflow-hidden">
+          <div className="absolute top-0 right-[10%] w-[1px] h-[70%] bg-black dark:bg-white"></div>
+          <div className="absolute bottom-0 left-[20%] w-[1px] h-[40%] bg-black dark:bg-white"></div>
+        </div>
+        
         <ScrollReveal animation="fadeUp">
-          <div className="text-left mb-16 md:mb-20 max-w-3xl">
-            <h2 className="text-5xl md:text-6xl font-light text-black dark:text-white mb-6 tracking-tight uppercase reveal-title">Client testimonials</h2>
-            <p className="text-gray-600 dark:text-gray-400 text-base font-light leading-relaxed reveal-text">
-              Discover what our valued customers have to say about their exceptional experiences with our luxury vehicles and service.
+          <div className="text-left mb-16 md:mb-20">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="inline-block w-1 h-6 sm:h-8 bg-black dark:bg-white"></span>
+              <h2 className="text-2xl sm:text-3xl font-light text-black dark:text-white uppercase tracking-wider">
+                Client Testimonials
+              </h2>
+            </div>
+            <p className="text-gray-600 dark:text-gray-400 uppercase tracking-wider text-xs sm:text-sm ml-9">
+              Discover what our clients have to say about us
             </p>
           </div>
         </ScrollReveal>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
           {testimonials.map((testimonial, index) => (
             <ScrollReveal
               key={index}
               animation="fadeUp"
               delay={index * 0.1}
-              className="testimonial-card bg-white dark:bg-black border-t border-gray-200 dark:border-gray-800 pt-8 h-full flex flex-col"
+              className="testimonial-card bg-white dark:bg-black border border-gray-200 dark:border-gray-800 p-6 sm:p-8 h-full flex flex-col hover:border-gray-400 dark:hover:border-white/50 transition-colors"
             >
-              <div className="mb-6">
-                <div className="flex space-x-1">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-4 h-4 text-black dark:text-white" />
-                  ))}
-                </div>
+              <div className="mb-6 flex space-x-1">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} className="w-4 h-4 text-black dark:text-white" />
+                ))}
               </div>
               
-              <p className="text-gray-600 dark:text-gray-400 font-light text-base italic leading-relaxed mb-8">"{testimonial.text}"</p>
+              <p className="text-gray-700 dark:text-gray-300 font-light text-base leading-relaxed mb-8">"{testimonial.text}"</p>
               
-              <div className="mt-auto flex items-center">
+              <div className="mt-auto flex items-center pt-6 border-t border-gray-200 dark:border-gray-800">
                 <img 
                   src={testimonial.image} 
                   alt={testimonial.name} 
-                  className="w-14 h-14 rounded-full object-cover mr-4"
+                  className="w-12 h-12 rounded-full object-cover mr-4"
                 />
                 <div>
-                  <h3 className="text-lg font-light text-black dark:text-white">{testimonial.name}</h3>
-                  <p className="text-gray-500 dark:text-gray-500 text-sm uppercase tracking-wider">{testimonial.position}</p>
+                  <h3 className="text-base font-light text-black dark:text-white">{testimonial.name}</h3>
+                  <p className="text-gray-500 text-xs uppercase tracking-wider">{testimonial.position}</p>
                 </div>
               </div>
             </ScrollReveal>
@@ -239,28 +248,39 @@ const ContactSection: React.FC = () => {
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-24 md:py-32 bg-gray-50 dark:bg-gray-950">
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+    <section ref={sectionRef} className="py-24 md:py-32 bg-gray-50 dark:bg-black text-black dark:text-white relative">
+      {/* Subtle overlays */}
+      <div className="absolute inset-0 opacity-10 overflow-hidden">
+        <div className="absolute top-0 right-[20%] w-[1px] h-[60%] bg-black dark:bg-white"></div>
+        <div className="absolute bottom-0 left-[15%] w-[1px] h-[50%] bg-black dark:bg-white"></div>
+      </div>
+      
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <ScrollReveal animation="fadeUp">
-          <div className="text-left mb-16 md:mb-20 max-w-3xl">
-            <h2 className="text-5xl md:text-6xl font-light text-black dark:text-white mb-6 tracking-tight uppercase reveal-title">Contact us</h2>
-            <p className="text-gray-600 dark:text-gray-400 text-base font-light leading-relaxed reveal-text">
-              Our automotive specialists are ready to assist you in finding the perfect vehicle that matches your preferences and lifestyle.
+          <div className="text-left mb-16 md:mb-20">
+            <div className="flex items-center gap-2 mb-2">
+              <span className="inline-block w-1 h-6 sm:h-8 bg-black dark:bg-white"></span>
+              <h2 className="text-2xl sm:text-3xl font-light text-black dark:text-white uppercase tracking-wider">
+                Contact Us
+              </h2>
+            </div>
+            <p className="text-gray-600 dark:text-gray-400 uppercase tracking-wider text-xs sm:text-sm ml-9">
+              Our specialists are ready to assist you
             </p>
           </div>
         </ScrollReveal>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start">
           <ScrollReveal 
             animation="fadeLeft"
             className="dealer-info flex flex-col space-y-10"
           >
             <div>
-              <h3 className="text-2xl font-light text-black dark:text-white mb-6 uppercase tracking-wide">Dealership information</h3>
+              <h3 className="text-xl font-light text-black dark:text-white mb-6 uppercase tracking-wide">Dealership information</h3>
               
-              <div className="border-t border-gray-200 dark:border-gray-800 pt-6 mb-10">
-                <h4 className="text-lg font-light text-black dark:text-white mb-4 uppercase tracking-wide">Hours of operation</h4>
-                <div className="space-y-3">
+              <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 p-6 sm:p-8 mb-10 hover:border-gray-400 dark:hover:border-white/50 transition-colors">
+                <h4 className="text-base font-light text-black dark:text-white mb-6 uppercase tracking-wide">Hours of operation</h4>
+                <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600 dark:text-gray-400 text-sm">Monday - Friday</span>
                     <span className="text-black dark:text-white">9:00 AM - 8:00 PM</span>
@@ -277,54 +297,60 @@ const ContactSection: React.FC = () => {
               </div>
             </div>
             
-            <div className="flex flex-col space-y-8">
+            <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 p-6 sm:p-8 flex flex-col space-y-8 hover:border-gray-400 dark:hover:border-white/50 transition-colors">
               <div className="flex items-start">
-                <Phone className="w-5 h-5 text-black dark:text-white mt-1 mr-4" />
+                <div className="w-10 h-10 border border-gray-300 dark:border-white/30 flex items-center justify-center mr-4">
+                  <Phone className="w-4 h-4 text-black dark:text-white" />
+                </div>
                 <div>
-                  <p className="text-xs text-gray-500 dark:text-gray-500 uppercase tracking-wider mb-1">Telephone</p>
+                  <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Telephone</p>
                   <p className="text-black dark:text-white">+1 (800) 555-0123</p>
                 </div>
               </div>
               
               <div className="flex items-start">
-                <Mail className="w-5 h-5 text-black dark:text-white mt-1 mr-4" />
+                <div className="w-10 h-10 border border-gray-300 dark:border-white/30 flex items-center justify-center mr-4">
+                  <Mail className="w-4 h-4 text-black dark:text-white" />
+                </div>
                 <div>
-                  <p className="text-xs text-gray-500 dark:text-gray-500 uppercase tracking-wider mb-1">Email</p>
+                  <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Email</p>
                   <p className="text-black dark:text-white">info@prestigeauto.com</p>
                 </div>
               </div>
               
               <div className="flex items-start">
-                <MapPin className="w-5 h-5 text-black dark:text-white mt-1 mr-4" />
+                <div className="w-10 h-10 border border-gray-300 dark:border-white/30 flex items-center justify-center mr-4">
+                  <MapPin className="w-4 h-4 text-black dark:text-white" />
+                </div>
                 <div>
-                  <p className="text-xs text-gray-500 dark:text-gray-500 uppercase tracking-wider mb-1">Location</p>
+                  <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Location</p>
                   <p className="text-black dark:text-white">123 Luxury Lane, Beverly Hills, CA 90210</p>
                 </div>
               </div>
-            </div>
-            
-            <div className="pt-8 mt-auto">
-              <a 
-                href="https://maps.google.com" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center text-sm text-black dark:text-white hover:opacity-70 transition-opacity uppercase tracking-wider"
-              >
-                View on map
-                <ArrowRight size={16} className="ml-2" />
-              </a>
+              
+              <div className="pt-4 mt-4 border-t border-gray-200 dark:border-gray-800">
+                <a 
+                  href="https://maps.google.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center text-sm text-black dark:text-white hover:opacity-70 transition-opacity uppercase tracking-wider"
+                >
+                  View on map
+                  <ArrowRight size={16} className="ml-2" />
+                </a>
+              </div>
             </div>
           </ScrollReveal>
           
           <ScrollReveal
             animation="fadeRight"
-            className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 p-8"
+            className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 p-6 sm:p-8 hover:border-gray-400 dark:hover:border-white/50 transition-colors"
           >
-            <h3 className="text-2xl font-light text-black dark:text-white mb-8 uppercase tracking-wide">Send a message</h3>
+            <h3 className="text-xl font-light text-black dark:text-white mb-8 uppercase tracking-wide">Send a message</h3>
             <form>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div>
-                  <label htmlFor="firstName" className="block text-xs uppercase tracking-wider text-gray-500 dark:text-gray-500 mb-2">
+                  <label htmlFor="firstName" className="block text-xs uppercase tracking-wider text-gray-500 mb-2">
                     First Name
                   </label>
                   <input
@@ -335,7 +361,7 @@ const ContactSection: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <label htmlFor="lastName" className="block text-xs uppercase tracking-wider text-gray-500 dark:text-gray-500 mb-2">
+                  <label htmlFor="lastName" className="block text-xs uppercase tracking-wider text-gray-500 mb-2">
                     Last Name
                   </label>
                   <input
@@ -348,7 +374,7 @@ const ContactSection: React.FC = () => {
               </div>
               
               <div className="mb-6">
-                <label htmlFor="email" className="block text-xs uppercase tracking-wider text-gray-500 dark:text-gray-500 mb-2">
+                <label htmlFor="email" className="block text-xs uppercase tracking-wider text-gray-500 mb-2">
                   Email
                 </label>
                 <input
@@ -360,7 +386,7 @@ const ContactSection: React.FC = () => {
               </div>
               
               <div className="mb-6">
-                <label htmlFor="phone" className="block text-xs uppercase tracking-wider text-gray-500 dark:text-gray-500 mb-2">
+                <label htmlFor="phone" className="block text-xs uppercase tracking-wider text-gray-500 mb-2">
                   Phone
                 </label>
                 <input
@@ -372,7 +398,7 @@ const ContactSection: React.FC = () => {
               </div>
               
               <div className="mb-6">
-                <label htmlFor="interest" className="block text-xs uppercase tracking-wider text-gray-500 dark:text-gray-500 mb-2">
+                <label htmlFor="interest" className="block text-xs uppercase tracking-wider text-gray-500 mb-2">
                   I'm interested in
                 </label>
                 <select
@@ -389,7 +415,7 @@ const ContactSection: React.FC = () => {
               </div>
               
               <div className="mb-8">
-                <label htmlFor="message" className="block text-xs uppercase tracking-wider text-gray-500 dark:text-gray-500 mb-2">
+                <label htmlFor="message" className="block text-xs uppercase tracking-wider text-gray-500 mb-2">
                   Message
                 </label>
                 <textarea
@@ -402,7 +428,7 @@ const ContactSection: React.FC = () => {
               
               <button
                 type="submit"
-                className="inline-block bg-black dark:bg-white text-white dark:text-black px-8 py-3 uppercase text-sm tracking-wider hover:opacity-90 transition-opacity"
+                className="px-6 sm:px-8 py-2 sm:py-3 border border-black dark:border-white text-black dark:text-white uppercase tracking-wider text-xs sm:text-sm transition-all hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black font-light"
               >
                 Submit
               </button>

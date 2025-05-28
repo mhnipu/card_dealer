@@ -456,7 +456,7 @@ export const vehiclesData = [
     name: 'EV Crossover',
     category: 'electric',
     price: 85000,
-    image: 'https://images.unsplash.com/photo-1593055357429-a166d056bbb1?auto=format&fit=crop&w=800&q=80',
+    image: 'https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=800&q=80',
     features: ['350 HP', '0-60 in 4.8s', '140 mph'],
     fuelType: 'electric',
     year: 2023,
