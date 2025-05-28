@@ -28,8 +28,9 @@ const VehiclesPage: React.FC = () => {
   const [selectedPriceRange, setSelectedPriceRange] = useState(priceRanges[0]);
   const [showFilters, setShowFilters] = useState(false);
   
-  // New state for background image
+  // New state for background image and collage images
   const [backgroundImage, setBackgroundImage] = useState('');
+  const [collageImages, setCollageImages] = useState<string[]>([]);
   
   // Get category from URL parameter
   const { category } = useParams<{ category?: string }>();
@@ -127,17 +128,61 @@ const VehiclesPage: React.FC = () => {
     // Find a representative vehicle for the selected category
     let bgImage = '';
     
-    if (selectedCategory === 'All') {
+    if (selectedCategory.toLowerCase() === 'all') {
       // Use the first vehicle's image for "All" category
       bgImage = vehiclesData[0]?.image || '';
+      
+      // Select exactly 4 random vehicles from different categories if possible
+      const categorySamples: Record<string, string> = {};
+      const availableCategories = [...new Set(vehiclesData.map(v => v.category))];
+      
+      // Try to get one vehicle from each category first
+      availableCategories.forEach(cat => {
+        if (Object.keys(categorySamples).length < 4) {
+          const vehiclesInCategory = vehiclesData.filter(v => v.category === cat);
+          if (vehiclesInCategory.length > 0) {
+            const randomVehicle = vehiclesInCategory[Math.floor(Math.random() * vehiclesInCategory.length)];
+            categorySamples[cat] = randomVehicle.image;
+          }
+        }
+      });
+      
+      // Get exactly 4 random vehicles for the collage
+      let collageImgs = Object.values(categorySamples);
+      
+      // If we have fewer than 4 categories, fill with random vehicles
+      if (collageImgs.length < 4) {
+        const remainingRandomVehicles = [...vehiclesData]
+          .sort(() => 0.5 - Math.random())
+          .filter(v => !collageImgs.includes(v.image))
+          .slice(0, 4 - collageImgs.length)
+          .map(v => v.image);
+          
+        collageImgs = [...collageImgs, ...remainingRandomVehicles];
+      } 
+      
+      // Always ensure we have exactly 4 images
+      collageImgs = collageImgs.slice(0, 4);
+      
+      console.log('Setting collage images:', collageImgs.length);
+      setCollageImages(collageImgs);
     } else {
       // Find a vehicle from the selected category
       const categoryVehicle = vehiclesData.find(
         vehicle => vehicle.category.toLowerCase() === selectedCategory.toLowerCase()
       );
       bgImage = categoryVehicle?.image || '';
+      
+      // Fallback to first vehicle if no match is found
+      if (!bgImage) {
+        bgImage = vehiclesData[0]?.image || '';
+      }
+      
+      // Clear collage images when not showing "all"
+      setCollageImages([]);
     }
     
+    console.log('Setting background image:', bgImage);
     setBackgroundImage(bgImage);
   }, [selectedCategory]);
   
@@ -174,6 +219,7 @@ const VehiclesPage: React.FC = () => {
             <VehicleBackground 
               vehicleImage={backgroundImage} 
               category={selectedCategory.toLowerCase()}
+              collageImages={collageImages}
             />
           </div>
         </div>

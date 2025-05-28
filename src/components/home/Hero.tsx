@@ -31,15 +31,38 @@ const carImages = vehiclesData.map(vehicle => ({
     : "Luxury that knows no boundaries",
   model: vehicle.name,
   specs: {
-    power: vehicle.features[0],
-    acceleration: vehicle.features[1],
-    topSpeed: vehicle.features[2]
+    power: vehicle.features && vehicle.features[0] ? vehicle.features[0] : 'N/A',
+    acceleration: vehicle.features && vehicle.features[1] ? vehicle.features[1] : 'N/A',
+    topSpeed: vehicle.features && vehicle.features[2] ? vehicle.features[2] : 'N/A'
   },
-  logo: vehicle.logo
+  logo: vehicle.logo || '',
+  category: vehicle.category // Add category to easily identify
 }));
+
+// Add a special "All" category entry at the beginning
+const allCategoryEntry = {
+  url: '',
+  alt: 'All vehicle categories',
+  description: 'Discover our full range of luxury vehicles. From powerful sports cars to elegant sedans and versatile SUVs, find the perfect match for your driving desires.',
+  model: 'All Categories',
+  specs: {
+    power: 'Various',
+    acceleration: 'Various',
+    topSpeed: 'Various'
+  },
+  logo: '',
+  category: 'all'
+};
+
+// Insert the "All" category at the beginning of carImages array
+carImages.unshift(allCategoryEntry);
+
+// Ensure we have at least one car image
+const hasValidCarImages = carImages.length > 0;
 
 const Hero: React.FC = () => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [collageImages, setCollageImages] = useState<string[]>([]);
   const { ref, inView } = useInView({
     threshold: 0.1,
     triggerOnce: true,
@@ -172,6 +195,19 @@ const Hero: React.FC = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // Get 4 random car images for collage
+  useEffect(() => {
+    // Only when "All" category is selected (index 0)
+    if (currentImageIndex === 0) {
+      const shuffled = [...vehiclesData]
+        .sort(() => 0.5 - Math.random())
+        .slice(0, 4)
+        .map(vehicle => vehicle.image);
+      
+      setCollageImages(shuffled);
+    }
+  }, [currentImageIndex]);
+
   const scrollToContent = () => {
     const featuredSection = document.getElementById('featured-section');
     if (featuredSection) {
@@ -179,9 +215,29 @@ const Hero: React.FC = () => {
     }
   };
 
-  const currentImage = carImages[currentImageIndex];
+  // Ensure we have valid data to display
+  if (!hasValidCarImages) {
+    console.warn("No valid car images available for Hero section");
+  }
+
+  const currentImage = carImages[currentImageIndex] || {
+    url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=800&q=80',
+    alt: 'Default luxury car',
+    description: 'Discover our premium collection of luxury vehicles',
+    model: 'Premium Vehicle',
+    specs: {
+      power: 'N/A',
+      acceleration: 'N/A',
+      topSpeed: 'N/A'
+    },
+    logo: '',
+    category: ''
+  };
+  
+  const isAllCategory = currentImageIndex === 0;
+  
   const nextImageIndex = (currentImageIndex + 1) % carImages.length;
-  const nextImage = carImages[nextImageIndex];
+  const nextImage = carImages[nextImageIndex] || currentImage;
   
   const goToPrevImage = () => {
     setCurrentImageIndex((prev) => (prev - 1 + carImages.length) % carImages.length);
@@ -209,7 +265,7 @@ const Hero: React.FC = () => {
       <div ref={imageRef} className="absolute inset-0 z-10 overflow-hidden">
         {carImages.map((img, idx) => (
           <motion.div
-            key={img.url}
+            key={img.url || `all-category-${idx}`}
             className="hero-image hero-layer-1 absolute inset-0 w-full h-full"
             initial={{ opacity: 0 }}
             animate={{ 
@@ -221,14 +277,34 @@ const Hero: React.FC = () => {
               scale: { duration: 1.4, ease: "easeOut" }
             }}
           >
-            <img
-              src={img.url}
-              alt={img.alt}
-              className="absolute inset-0 w-full h-full object-cover"
-              loading={idx === 0 ? "eager" : "lazy"}
-              width="1920"
-              height="1080"
-            />
+            {idx === 0 && isAllCategory ? (
+              // 2x2 collage for "All Categories"
+              <div className="grid grid-cols-2 grid-rows-2 h-full w-full">
+                {collageImages.map((imgSrc, colIdx) => (
+                  <div key={`collage-${colIdx}`} className="relative overflow-hidden">
+                    <img
+                      src={imgSrc}
+                      alt={`Featured car ${colIdx + 1}`}
+                      className="w-full h-full object-cover transform hover:scale-110 transition-transform duration-1000"
+                      loading={colIdx === 0 ? "eager" : "lazy"}
+                      width="960"
+                      height="540"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/30 to-transparent"></div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              // Single image for specific categories
+              <img
+                src={img.url}
+                alt={img.alt}
+                className="absolute inset-0 w-full h-full object-cover"
+                loading={idx === 0 ? "eager" : "lazy"}
+                width="1920"
+                height="1080"
+              />
+            )}
             
             {/* Individual image overlay for depth - stronger left-to-right gradient */}
             <div className="absolute inset-0 bg-gradient-to-r from-black via-black/30 to-transparent"></div>
@@ -369,12 +445,12 @@ const Hero: React.FC = () => {
                   initial={{ opacity: 0, y: 30 }}
                   animate={inView ? { opacity: 1, y: 0 } : {}}
                   transition={{ duration: 0.8, delay: 0.6 }}
-                  className="grid grid-cols-1 sm:grid-cols-3 gap-8 mb-12 relative z-10"
+                  className={`grid grid-cols-1 sm:grid-cols-3 gap-8 mb-12 relative z-10 ${isAllCategory ? 'opacity-80' : ''}`}
                 >
                   <div className="flex flex-col backdrop-blur-sm bg-white/5 p-5 border-b-2 border-white/20">
                     <div className="flex items-center gap-3 mb-3">
                       <Zap size={18} className="text-white/90" strokeWidth={1.5} />
-                      <p className="text-white/80 text-xs uppercase tracking-widest">POWER</p>
+                      <p className="text-white/80 text-xs uppercase tracking-widest">{isAllCategory ? 'RANGE' : 'POWER'}</p>
                     </div>
                     <p className="text-white font-light text-2xl">{currentImage.specs.power}</p>
                   </div>
@@ -382,7 +458,7 @@ const Hero: React.FC = () => {
                   <div className="flex flex-col backdrop-blur-sm bg-white/5 p-5 border-b-2 border-white/20">
                     <div className="flex items-center gap-3 mb-3">
                       <Clock size={18} className="text-white/90" strokeWidth={1.5} />
-                      <p className="text-white/80 text-xs uppercase tracking-widest">0-60 MPH</p>
+                      <p className="text-white/80 text-xs uppercase tracking-widest">{isAllCategory ? 'PERFORMANCE' : '0-60 MPH'}</p>
                     </div>
                     <p className="text-white font-light text-2xl">{currentImage.specs.acceleration}</p>
                   </div>
@@ -390,9 +466,9 @@ const Hero: React.FC = () => {
                   <div className="flex flex-col backdrop-blur-sm bg-white/5 p-5 border-b-2 border-white/20">
                     <div className="flex items-center gap-3 mb-3">
                       <Gauge size={18} className="text-white/90" strokeWidth={1.5} />
-                      <p className="text-white/80 text-xs uppercase tracking-widest">TOP SPEED</p>
+                      <p className="text-white/80 text-xs uppercase tracking-widest">{isAllCategory ? 'MODELS' : 'TOP SPEED'}</p>
                     </div>
-                    <p className="text-white font-light text-2xl">{currentImage.specs.topSpeed}</p>
+                    <p className="text-white font-light text-2xl">{isAllCategory ? vehiclesData.length.toString() : currentImage.specs.topSpeed}</p>
                   </div>
                 </motion.div>
                 
@@ -465,7 +541,7 @@ const Hero: React.FC = () => {
             <div className="hidden md:flex items-center gap-3">
               <span className="w-6 h-[1px] bg-white/40"></span>
               <div className="uppercase text-xs text-white/70 tracking-wider">
-                {currentImageIndex + 1}/{carImages.length}
+                {isAllCategory ? "ALL" : `${currentImageIndex}/${carImages.length - 1}`}
               </div>
             </div>
           </div>
@@ -496,6 +572,10 @@ const Hero: React.FC = () => {
                     alt={nextImage.model}
                     className="w-full h-full object-contain p-2"
                   />
+                ) : nextImageIndex === 0 ? (
+                  <div className="w-full h-full bg-white/10 flex items-center justify-center">
+                    <span className="text-white text-xs font-bold">ALL</span>
+                  </div>
                 ) : (
                   <div className="w-full h-full bg-white/10"></div>
                 )}

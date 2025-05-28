@@ -51,10 +51,8 @@ const Navbar = () => {
       { name: 'Electric', path: '/vehicles/electric' },
       { name: 'Compare Models', path: '/vehicles/compare' },
     ]},
-    { name: 'Design', path: '/design' },
-    { name: 'Innovation', path: '/innovation' },
     { name: 'Services', path: '/services' },
-    { name: 'Shop', path: '/shop' },
+    { name: 'Showroom', path: '/showroom' },
   ];
 
   const secondaryLinks = [

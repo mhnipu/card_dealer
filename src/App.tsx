@@ -7,6 +7,8 @@ import CarDetails from './pages/CarDetails';
 import Categories from './pages/Categories';
 import Contact from './pages/Contact';
 import VehiclesPage from './pages/Vehicles';
+import ServicesPage from './pages/Services';
+import ShowroomPage from './pages/Showroom';
 import { ThemeProvider } from './context/ThemeContext';
 import ScrollAnimationProvider from './context/ScrollAnimationContext';
 import { gsap } from 'gsap';
@@ -47,6 +49,9 @@ function App() {
                 <Route path="/cars/:id" element={<CarDetails />} />
                 <Route path="/categories/:category" element={<Categories />} />
                 <Route path="/contact" element={<Contact />} />
+                <Route path="/services" element={<ServicesPage />} />
+                <Route path="/showroom" element={<ShowroomPage />} />
+                <Route path="/showroom/:productId" element={<ShowroomPage />} />
               </Routes>
             </main>
             <Footer />

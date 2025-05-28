@@ -465,4 +465,4 @@ export const vehiclesData = [
 ];
 
 // Standard categories used across the application
-export const standardCategories = ['all', 'suv', 'sedan', 'sports', 'electric', 'concept'];
+export const standardCategories = ['All', 'suv', 'sedan', 'sports', 'electric', 'concept'];

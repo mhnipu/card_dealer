@@ -5,17 +5,22 @@ interface VehicleBackgroundProps {
   vehicleImage: string;
   category?: string;
   className?: string;
+  collageImages?: string[];
 }
 
 const VehicleBackground: React.FC<VehicleBackgroundProps> = ({ 
   vehicleImage,
   category = 'all',
-  className = ''
+  className = '',
+  collageImages = []
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const svgRef = useRef<SVGSVGElement>(null);
   const blobRef = useRef<SVGPathElement>(null);
   const blobRef2 = useRef<SVGPathElement>(null);
+  
+  // Check if we should show collage (when category is 'all' and we have collage images)
+  const showCollage = category.toLowerCase() === 'all' && collageImages.length === 4;
   
   useEffect(() => {
     if (!svgRef.current || !blobRef.current || !blobRef2.current || !containerRef.current) return;
@@ -147,11 +152,48 @@ const VehicleBackground: React.FC<VehicleBackgroundProps> = ({
       {/* Vehicle image with overlay */}
       <div className="absolute inset-0 z-0">
         <div className="vehicle-bg-image absolute inset-0 w-full h-full">
-          <img 
-            src={vehicleImage}
-            alt="Vehicle background"
-            className="absolute inset-0 w-full h-full object-cover md:object-contain"
-          />
+          {showCollage ? (
+            // 4 cars side by side for "All" category
+            <div className="flex flex-row h-full w-full relative">
+              {collageImages.map((img, index) => (
+                <div key={`collage-${index}`} className="relative overflow-hidden w-1/4 h-full">
+                  <img
+                    src={img}
+                    alt={`Vehicle category ${index + 1}`}
+                    className="w-full h-full object-cover object-center transition-transform duration-10000 hover:scale-110"
+                    loading={index === 0 ? "eager" : "lazy"}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/50 to-black/30"></div>
+                  
+                  {/* Category label */}
+                  <div className="absolute bottom-4 left-0 right-0 text-center">
+                    <span className="px-2 py-1 bg-black/40 text-white text-xs uppercase tracking-wider">
+                      {index === 0 ? "Sports" : index === 1 ? "Sedan" : index === 2 ? "SUV" : "Electric"}
+                    </span>
+                  </div>
+                  
+                  {/* Divider line (except for last item) */}
+                  {index < collageImages.length - 1 && (
+                    <div className="absolute top-[15%] bottom-[15%] right-0 w-[1px] bg-white/20"></div>
+                  )}
+                </div>
+              ))}
+              
+              {/* Overlay caption */}
+              <div className="absolute top-4 left-0 right-0 text-center z-10">
+                <span className="px-4 py-2 bg-black/50 text-white text-sm uppercase tracking-wider">
+                  All Vehicle Categories
+                </span>
+              </div>
+            </div>
+          ) : (
+            // Single image for specific category
+            <img 
+              src={vehicleImage}
+              alt="Vehicle background"
+              className="absolute inset-0 w-full h-full object-cover md:object-contain"
+            />
+          )}
           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/70 to-black/40"></div>
         </div>
       </div>
