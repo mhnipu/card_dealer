@@ -1,8 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
-import { Wrench, Car, Clock, Shield, Award, Phone, Users, Settings, CircleDollarSign } from 'lucide-react';
+import { Wrench, Car, Clock, Shield, Award, Phone, Users, Settings, CircleDollarSign, Star } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useGSAP } from '@gsap/react';
+import { ScrollReveal, Parallax } from '../context/ScrollAnimationContext';
+
+gsap.registerPlugin(ScrollTrigger);
 
 // Service type definition
 interface Service {
@@ -15,19 +21,46 @@ interface Service {
 }
 
 const ServicesPage: React.FC = () => {
+  const servicesRef = useRef<HTMLDivElement>(null);
+  
   // Scroll to top on page load
   useEffect(() => {
+    document.title = 'Prestige Auto | Luxury Car Services';
     window.scrollTo(0, 0);
   }, []);
+
+  // Apply scroll animations to the entire services page
+  useGSAP(() => {
+    if (!servicesRef.current) return;
+    
+    // Animate sections as they enter the viewport
+    const sections = servicesRef.current.querySelectorAll('section');
+    sections.forEach((section) => {
+      gsap.fromTo(
+        section,
+        { opacity: 0, y: 50 },
+        {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          scrollTrigger: {
+            trigger: section,
+            start: 'top 80%',
+            toggleActions: 'play none none none'
+          }
+        }
+      );
+    });
+  }, []);
   
-  // List of services offered
+  // List of services offered with direct Unsplash URLs
   const services: Service[] = [
     {
       id: 'maintenance',
       title: 'Premium Maintenance',
       description: 'Factory-trained technicians using genuine parts ensure your luxury vehicle maintains its performance and value.',
       icon: <Wrench size={28} strokeWidth={1.5} />,
-      image: 'https://images.unsplash.com/photo-1517524008697-84bbe3c3fd98?auto=format&fit=crop&w=1800&q=80',
+      image: 'https://images.pexels.com/photos/3807386/pexels-photo-3807386.jpeg?auto=compress&cs=tinysrgb&w=1600',
       features: [
         'Comprehensive vehicle inspection',
         'Fluid checks and top-offs',
@@ -41,7 +74,7 @@ const ServicesPage: React.FC = () => {
       title: 'Exquisite Detailing',
       description: 'Our meticulous detailing services restore your vehicle\'s appearance to showroom condition, inside and out.',
       icon: <Car size={28} strokeWidth={1.5} />,
-      image: 'https://images.unsplash.com/photo-1607860108855-64acf2078ed9?auto=format&fit=crop&w=1800&q=80',
+      image: 'https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=1600',
       features: [
         'Hand wash and wax',
         'Paint correction',
@@ -55,7 +88,7 @@ const ServicesPage: React.FC = () => {
       title: 'Express Services',
       description: 'Quick services completed while you wait in our luxury lounge with complimentary refreshments.',
       icon: <Clock size={28} strokeWidth={1.5} />,
-      image: 'https://images.unsplash.com/photo-1567610701553-6dc6a73251ff?auto=format&fit=crop&w=1800&q=80',
+      image: 'https://images.pexels.com/photos/2244746/pexels-photo-2244746.jpeg?auto=compress&cs=tinysrgb&w=1600',
       features: [
         'Oil and filter change',
         'Tire rotation',
@@ -69,7 +102,7 @@ const ServicesPage: React.FC = () => {
       title: 'Warranty Services',
       description: 'Comprehensive warranty coverage and extensions to provide peace of mind for your luxury investment.',
       icon: <Shield size={28} strokeWidth={1.5} />,
-      image: 'https://images.unsplash.com/photo-1581092921461-d2a08e97d7c7?auto=format&fit=crop&w=1800&q=80',
+      image: 'https://images.pexels.com/photos/4481944/pexels-photo-4481944.jpeg?auto=compress&cs=tinysrgb&w=1600',
       features: [
         'Factory warranty service',
         'Extended warranty options',
@@ -83,7 +116,7 @@ const ServicesPage: React.FC = () => {
       title: 'Bespoke Customization',
       description: 'Personalize your vehicle with premium upgrades and custom modifications to reflect your unique style.',
       icon: <Settings size={28} strokeWidth={1.5} />,
-      image: 'https://images.unsplash.com/photo-1611566026373-c7c8712baf14?auto=format&fit=crop&w=1800&q=80',
+      image: 'https://images.pexels.com/photos/2684219/pexels-photo-2684219.jpeg?auto=compress&cs=tinysrgb&w=1600',
       features: [
         'Performance upgrades',
         'Interior customization',
@@ -97,7 +130,7 @@ const ServicesPage: React.FC = () => {
       title: 'Concierge Services',
       description: 'Experience unparalleled convenience with our premium concierge services designed for busy professionals.',
       icon: <Users size={28} strokeWidth={1.5} />,
-      image: 'https://images.unsplash.com/photo-1563453392212-326f5e854473?auto=format&fit=crop&w=1800&q=80',
+      image: 'https://images.pexels.com/photos/2829532/pexels-photo-2829532.jpeg?auto=compress&cs=tinysrgb&w=1600',
       features: [
         'Vehicle pickup and delivery',
         'Loaner vehicles',
@@ -107,44 +140,111 @@ const ServicesPage: React.FC = () => {
       ]
     }
   ];
+
+  // Service highlights for the Services Preview section
+  const serviceHighlights = [
+    {
+      icon: <Wrench size={24} strokeWidth={1.5} />,
+      title: 'Premium Maintenance',
+      description: 'Factory-trained technicians using genuine parts to ensure your luxury vehicle maintains peak performance.',
+      image: 'https://images.pexels.com/photos/3807386/pexels-photo-3807386.jpeg?auto=compress&cs=tinysrgb&w=600'
+    },
+    {
+      icon: <Car size={24} strokeWidth={1.5} />,
+      title: 'Exquisite Detailing',
+      description: 'Meticulous cleaning and restoration services that bring your vehicle back to showroom condition.',
+      image: 'https://images.pexels.com/photos/372810/pexels-photo-372810.jpeg?auto=compress&cs=tinysrgb&w=600'
+    },
+    {
+      icon: <Settings size={24} strokeWidth={1.5} />,
+      title: 'Bespoke Customization',
+      description: 'Tailor your luxury vehicle with premium upgrades and modifications to reflect your unique style.',
+      image: 'https://images.pexels.com/photos/2684219/pexels-photo-2684219.jpeg?auto=compress&cs=tinysrgb&w=600'
+    }
+  ];
   
   return (
-    <div className="bg-white dark:bg-black text-black dark:text-white min-h-screen">
-      {/* Hero Section */}
-      <section className="relative h-[60vh] sm:h-[70vh] md:h-[80vh] overflow-hidden mb-12 sm:mb-20">
+    <div ref={servicesRef} className="bg-white dark:bg-black text-black dark:text-white min-h-screen">
+      {/* Hero Section with Image Collage */}
+      <section className="relative h-[75vh] sm:h-[80vh] md:h-[90vh] overflow-hidden mb-12 sm:mb-20">
+        {/* Main Background */}
         <div className="absolute inset-0 w-full h-full">
           <img 
-            src="https://images.unsplash.com/photo-1597766325363-fc44387cd3c0?auto=format&fit=crop&w=2000&q=80" 
+            src="https://images.pexels.com/photos/2244746/pexels-photo-2244746.jpeg?auto=compress&cs=tinysrgb&w=2000" 
             alt="Luxury car service" 
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black via-black/70 to-transparent"></div>
         </div>
         
+        {/* Image Collage - Absolute positioned on top of the hero */}
+        <div className="absolute right-0 top-0 bottom-0 w-3/4 lg:w-1/2 hidden md:block">
+          {/* Overlay gradient for readability */}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/40 to-black/20 z-20"></div>
+          
+          {/* Service images grid */}
+          <div className="absolute inset-0 grid grid-cols-2 gap-4 p-8 z-10">
+            <div className="relative h-[45%]">
+              <img 
+                src="https://images.pexels.com/photos/6873088/pexels-photo-6873088.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                alt="Mechanic working on engine" 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/30"></div>
+            </div>
+            <div className="relative h-[45%] mt-16">
+              <img 
+                src="https://images.pexels.com/photos/6870332/pexels-photo-6870332.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                alt="Car polishing" 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/30"></div>
+            </div>
+            <div className="relative h-[45%]">
+              <img 
+                src="https://images.pexels.com/photos/9741654/pexels-photo-9741654.jpeg?auto=compress&cs=tinysrgb&w=800" 
+                alt="Car diagnostics" 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/30"></div>
+            </div>
+            <div className="relative h-[45%] mt-[-16%]">
+              <img 
+                src="https://img.freepik.com/free-photo/cleaning-car-seats-car-service_1303-27237.jpg?w=800&t=st=1715899175~exp=1715899775~hmac=63ae56fc9b818a93ddf9523fa2288b37b112c347b13c636b728560ee0f19a21f" 
+                alt="Luxury car interior cleaning" 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/30"></div>
+            </div>
+          </div>
+        </div>
+        
         <div className="absolute inset-0 flex items-center">
           <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 w-full">
             <div className="max-w-2xl">
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8 }}
-              >
-                <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light uppercase tracking-wide text-white mb-4 sm:mb-6">
-                  Premium Services
-                </h1>
-                <div className="w-24 h-[2px] bg-white mb-6 sm:mb-8"></div>
-                <p className="text-base sm:text-lg md:text-xl text-white/90 font-light leading-relaxed mb-8 sm:mb-10">
-                  Experience exceptional care for your luxury vehicle with our comprehensive range of premium services designed to maintain perfection.
-                </p>
-                <div className="flex flex-wrap gap-4">
-                  <Link to="/contact" className="px-6 sm:px-10 py-3 sm:py-4 bg-white text-black uppercase tracking-wider text-xs sm:text-sm font-light hover:bg-white/90 transition-all">
-                    Schedule Service
-                  </Link>
-                  <button className="px-6 sm:px-10 py-3 sm:py-4 border border-white text-white uppercase tracking-wider text-xs sm:text-sm font-light hover:bg-white/10 transition-all">
-                    Explore Services
-                  </button>
-                </div>
-              </motion.div>
+              <Parallax speed={-0.2}>
+                <motion.div
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.8 }}
+                >
+                  <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light uppercase tracking-wide text-white mb-4 sm:mb-6">
+                    Premium Services
+                  </h1>
+                  <div className="w-24 h-[2px] bg-white mb-6 sm:mb-8"></div>
+                  <p className="text-base sm:text-lg md:text-xl text-white/90 font-light leading-relaxed mb-8 sm:mb-10">
+                    Experience exceptional care for your luxury vehicle with our comprehensive range of premium services designed to maintain perfection.
+                  </p>
+                  <div className="flex flex-wrap gap-4">
+                    <Link to="/contact" className="px-6 sm:px-10 py-3 sm:py-4 bg-white text-black uppercase tracking-wider text-xs sm:text-sm font-light hover:bg-white/90 transition-all">
+                      Schedule Service
+                    </Link>
+                    <button className="px-6 sm:px-10 py-3 sm:py-4 border border-white text-white uppercase tracking-wider text-xs sm:text-sm font-light hover:bg-white/10 transition-all">
+                      Explore Services
+                    </button>
+                  </div>
+                </motion.div>
+              </Parallax>
             </div>
           </div>
         </div>
@@ -152,71 +252,128 @@ const ServicesPage: React.FC = () => {
         {/* Decorative elements */}
         <div className="absolute top-1/4 right-12 w-[15%] h-[1px] bg-white/40 z-10 hidden md:block"></div>
         <div className="absolute bottom-1/4 left-12 w-[1px] h-[15%] bg-white/40 z-10 hidden md:block"></div>
+        
+        {/* Corner accents - matching the Vehicles page */}
+        <div className="absolute top-12 right-12 w-[8%] h-[1px] bg-white/30 z-10 hidden md:block"></div>
+        <div className="absolute top-12 right-12 w-[1px] h-[8%] bg-white/30 z-10 hidden md:block"></div>
+        <div className="absolute bottom-12 left-16 w-[8%] h-[1px] bg-white/30 z-10 hidden md:block"></div>
+        <div className="absolute bottom-12 left-16 w-[1px] h-[8%] bg-white/30 z-10 hidden md:block"></div>
       </section>
       
-      {/* Why Choose Us Section */}
-      <section className="py-16 sm:py-24 bg-gray-100 dark:bg-gray-900">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <div className="flex items-center justify-center gap-2 mb-4">
-              <div className="w-8 h-[1px] bg-black dark:bg-white"></div>
-              <h2 className="text-sm uppercase tracking-[0.2em] font-light text-black dark:text-white">Exceptional Service</h2>
-              <div className="w-8 h-[1px] bg-black dark:bg-white"></div>
-            </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-black dark:text-white uppercase tracking-wider mb-6">
-              Why Choose Our Services
-            </h2>
-            <p className="text-base sm:text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto">
-              Our dedication to excellence and attention to detail sets our service department apart, ensuring your vehicle receives the premium care it deserves.
-            </p>
+      {/* Visual Divider - reduced margin */}
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 my-8">
+        <div className="w-full h-px bg-gray-200 dark:bg-gray-800"></div>
+      </div>
+      
+      {/* Our Services Section - Using the visual style of Client Testimonials */}
+      <section className="py-24 md:py-32 bg-white dark:bg-black text-black dark:text-white">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative">
+          {/* Subtle overlays */}
+          <div className="absolute inset-0 opacity-10 overflow-hidden">
+            <div className="absolute top-0 right-[10%] w-[1px] h-[70%] bg-black dark:bg-white"></div>
+            <div className="absolute bottom-0 left-[20%] w-[1px] h-[40%] bg-black dark:bg-white"></div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10">
-            <div className="bg-white dark:bg-black p-8 border border-gray-200 dark:border-gray-800 flex flex-col items-center text-center group hover:border-gray-400 dark:hover:border-gray-600 transition-all duration-300">
-              <div className="w-16 h-16 flex items-center justify-center border border-gray-200 dark:border-gray-700 rounded-full mb-6 group-hover:border-black dark:group-hover:border-white transition-all">
-                <Award size={28} className="text-black dark:text-white" strokeWidth={1.5} />
+          <ScrollReveal animation="fadeUp">
+            <div className="text-left mb-16 md:mb-20">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="inline-block w-1 h-6 sm:h-8 bg-black dark:bg-white"></span>
+                <h2 className="text-2xl sm:text-3xl font-light text-black dark:text-white uppercase tracking-wider">
+                  Our Services
+                </h2>
               </div>
-              <h3 className="text-xl sm:text-2xl font-light text-black dark:text-white mb-4">Certified Expertise</h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                Our factory-trained technicians undergo rigorous certification and continuous education to maintain the highest standards of service.
+              <p className="text-gray-600 dark:text-gray-400 uppercase tracking-wider text-xs sm:text-sm ml-9">
+                Luxury automotive care at its finest
               </p>
             </div>
-            
-            <div className="bg-white dark:bg-black p-8 border border-gray-200 dark:border-gray-800 flex flex-col items-center text-center group hover:border-gray-400 dark:hover:border-gray-600 transition-all duration-300">
-              <div className="w-16 h-16 flex items-center justify-center border border-gray-200 dark:border-gray-700 rounded-full mb-6 group-hover:border-black dark:group-hover:border-white transition-all">
-                <CircleDollarSign size={28} className="text-black dark:text-white" strokeWidth={1.5} />
-              </div>
-              <h3 className="text-xl sm:text-2xl font-light text-black dark:text-white mb-4">Transparent Pricing</h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                No hidden fees or surprises. We provide detailed quotes upfront and keep you informed throughout the service process.
-              </p>
-            </div>
-            
-            <div className="bg-white dark:bg-black p-8 border border-gray-200 dark:border-gray-800 flex flex-col items-center text-center group hover:border-gray-400 dark:hover:border-gray-600 transition-all duration-300">
-              <div className="w-16 h-16 flex items-center justify-center border border-gray-200 dark:border-gray-700 rounded-full mb-6 group-hover:border-black dark:group-hover:border-white transition-all">
-                <Phone size={28} className="text-black dark:text-white" strokeWidth={1.5} />
-              </div>
-              <h3 className="text-xl sm:text-2xl font-light text-black dark:text-white mb-4">Dedicated Support</h3>
-              <p className="text-gray-600 dark:text-gray-400">
-                Our service advisors provide personalized attention and are available to assist you with all your vehicle maintenance needs.
-              </p>
-            </div>
+          </ScrollReveal>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            {serviceHighlights.map((service, index) => (
+              <ScrollReveal
+                key={index}
+                animation="fadeUp"
+                delay={index * 0.1}
+                className="service-card relative bg-white dark:bg-black border border-gray-200 dark:border-gray-800 h-full flex flex-col hover:border-gray-400 dark:hover:border-white/50 transition-colors overflow-hidden group"
+              >
+                {/* Service image */}
+                <div className="relative h-48">
+                  <img 
+                    src={service.image} 
+                    alt={service.title} 
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+                  
+                  {/* Title overlay on image */}
+                  <div className="absolute bottom-0 left-0 p-6">
+                    <h3 className="text-lg font-light text-white mb-1">{service.title}</h3>
+                  </div>
+                </div>
+                
+                {/* Service content */}
+                <div className="p-6 flex-grow flex flex-col">
+                  <div className="mb-4 flex items-center">
+                    <div className="w-10 h-10 border border-gray-300 dark:border-white/30 flex items-center justify-center mr-3">
+                      {service.icon}
+                    </div>
+                    <h3 className="text-lg md:text-xl font-light text-black dark:text-white">{service.title}</h3>
+                  </div>
+                  
+                  <p className="text-gray-700 dark:text-gray-300 font-light text-base leading-relaxed mb-6">
+                    {service.description}
+                  </p>
+                  
+                  <div className="mt-auto pt-4 border-t border-gray-200 dark:border-gray-800">
+                    <Link 
+                      to={`/services/${service.title.toLowerCase().replace(/\s+/g, '-')}`} 
+                      className="inline-flex items-center text-sm text-black dark:text-white hover:opacity-70 transition-opacity uppercase tracking-wider"
+                    >
+                      Learn more
+                      <svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" className="ml-2">
+                        <path d="M1 7H13M13 7L7 1M13 7L7 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </Link>
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+          
+          {/* View all services button */}
+          <div className="flex justify-center mt-12">
+            <Link 
+              to="/services/all" 
+              className="px-6 sm:px-10 py-3 sm:py-4 bg-black dark:bg-white text-white dark:text-black uppercase tracking-wider text-xs sm:text-sm font-light hover:bg-black/90 dark:hover:bg-white/90 transition-all"
+            >
+              View All Services
+            </Link>
           </div>
         </div>
       </section>
       
       {/* Service Offerings */}
-      <section className="py-16 sm:py-24">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-16">
-            <div className="flex items-center gap-2 mb-4">
-              <span className="inline-block w-10 h-[2px] bg-black dark:bg-white"></span>
-              <h2 className="text-sm uppercase tracking-[0.2em] font-light text-black dark:text-white">Our Offerings</h2>
+      <section className="py-16 sm:py-24 relative">
+        {/* Subtle overlays */}
+        <div className="absolute inset-0 opacity-10 overflow-hidden">
+          <div className="absolute top-0 right-[10%] w-[1px] h-[70%] bg-black dark:bg-white"></div>
+          <div className="absolute bottom-0 left-[10%] w-[1px] h-[40%] bg-black dark:bg-white"></div>
+        </div>
+        
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <ScrollReveal animation="fadeUp">
+            <div className="mb-16">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="inline-block w-1 h-6 sm:h-8 bg-black dark:bg-white"></span>
+                <h2 className="text-2xl sm:text-3xl font-light text-black dark:text-white uppercase tracking-wider">
+                  Premium Services
+                </h2>
+              </div>
+              <p className="text-gray-600 dark:text-gray-400 uppercase tracking-wider text-xs sm:text-sm ml-9">
+                Comprehensive care for your luxury vehicle
+              </p>
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-black dark:text-white uppercase tracking-wider">
-              Premium Services
-            </h2>
-          </div>
+          </ScrollReveal>
           
           <div className="space-y-24">
             {services.map((service, index) => {
@@ -248,6 +405,12 @@ const ServicesPage: React.FC = () => {
                         {service.icon}
                       </div>
                     </div>
+                    
+                    {/* Corner accents - matching the Vehicles page */}
+                    <div className="absolute top-0 left-0 w-[15%] h-[1px] bg-white/50"></div>
+                    <div className="absolute top-0 left-0 w-[1px] h-[15%] bg-white/50"></div>
+                    <div className="absolute bottom-0 right-0 w-[15%] h-[1px] bg-white/50"></div>
+                    <div className="absolute bottom-0 right-0 w-[1px] h-[15%] bg-white/50"></div>
                   </motion.div>
                   
                   <motion.div
@@ -292,56 +455,72 @@ const ServicesPage: React.FC = () => {
       </section>
       
       {/* CTA Section */}
-      <section className="py-16 sm:py-24 bg-black text-white">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8">
+      <section className="py-16 sm:py-24 bg-black text-white relative">
+        {/* Subtle overlays */}
+        <div className="absolute inset-0 opacity-10 overflow-hidden">
+          <div className="absolute top-0 right-[20%] w-[1px] h-[60%] bg-white"></div>
+          <div className="absolute bottom-0 left-[15%] w-[1px] h-[50%] bg-white"></div>
+        </div>
+        
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
-            <div>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-light uppercase tracking-wider mb-6">
-                Schedule Your Service
-              </h2>
-              <p className="text-base sm:text-lg text-gray-300 mb-8">
-                Experience the difference of premium service for your luxury vehicle. Our team of experts is ready to assist you with any maintenance or customization needs.
-              </p>
-              <div className="flex flex-wrap gap-4">
-                <Link 
-                  to="/contact" 
-                  className="px-6 sm:px-10 py-3 sm:py-4 bg-white text-black uppercase tracking-wider text-xs sm:text-sm font-light hover:bg-white/90 transition-all"
-                >
-                  Book Appointment
-                </Link>
-                <a 
-                  href="tel:+1234567890" 
-                  className="px-6 sm:px-10 py-3 sm:py-4 border border-white text-white uppercase tracking-wider text-xs sm:text-sm font-light hover:bg-white/10 transition-all inline-flex items-center gap-2"
-                >
-                  <Phone size={16} />
-                  Call Us
-                </a>
+            <ScrollReveal animation="fadeLeft">
+              <div>
+                <h2 className="text-3xl sm:text-4xl md:text-5xl font-light uppercase tracking-wider mb-6">
+                  Schedule Your Service
+                </h2>
+                <p className="text-base sm:text-lg text-gray-300 mb-8">
+                  Experience the difference of premium service for your luxury vehicle. Our team of experts is ready to assist you with any maintenance or customization needs.
+                </p>
+                <div className="flex flex-wrap gap-4">
+                  <Link 
+                    to="/contact" 
+                    className="px-6 sm:px-10 py-3 sm:py-4 bg-white text-black uppercase tracking-wider text-xs sm:text-sm font-light hover:bg-white/90 transition-all"
+                  >
+                    Book Appointment
+                  </Link>
+                  <a 
+                    href="tel:+1234567890" 
+                    className="px-6 sm:px-10 py-3 sm:py-4 border border-white text-white uppercase tracking-wider text-xs sm:text-sm font-light hover:bg-white/10 transition-all inline-flex items-center gap-2"
+                  >
+                    <Phone size={16} />
+                    Call Us
+                  </a>
+                </div>
               </div>
-            </div>
+            </ScrollReveal>
             
-            <div className="relative">
-              <img 
-                src="https://images.unsplash.com/photo-1559519529-0936e4058364?auto=format&fit=crop&w=1800&q=80" 
-                alt="Service center" 
-                className="w-full h-[400px] object-cover"
-              />
-              <div className="absolute inset-0 bg-black/20"></div>
-              
-              {/* Opening hours overlay */}
-              <div className="absolute bottom-0 left-0 right-0 bg-black/80 p-6">
-                <h3 className="text-xl font-light mb-4">Service Center Hours</h3>
-                <div className="grid grid-cols-2 gap-2">
-                  <div>
-                    <p className="text-gray-300 text-sm">Monday - Friday</p>
-                    <p className="text-white">8:00 AM - 6:00 PM</p>
-                  </div>
-                  <div>
-                    <p className="text-gray-300 text-sm">Saturday</p>
-                    <p className="text-white">9:00 AM - 4:00 PM</p>
+            <ScrollReveal animation="fadeRight">
+              <div className="relative">
+                <img 
+                  src="https://images.pexels.com/photos/1547813/pexels-photo-1547813.jpeg?auto=compress&cs=tinysrgb&w=1600" 
+                  alt="Service center" 
+                  className="w-full h-[400px] object-cover"
+                />
+                <div className="absolute inset-0 bg-black/20"></div>
+                
+                {/* Corner accents */}
+                <div className="absolute top-0 left-0 w-[15%] h-[1px] bg-white/50"></div>
+                <div className="absolute top-0 left-0 w-[1px] h-[15%] bg-white/50"></div>
+                <div className="absolute bottom-0 right-0 w-[15%] h-[1px] bg-white/50"></div>
+                <div className="absolute bottom-0 right-0 w-[1px] h-[15%] bg-white/50"></div>
+                
+                {/* Opening hours overlay */}
+                <div className="absolute bottom-0 left-0 right-0 bg-black/80 p-6">
+                  <h3 className="text-xl font-light mb-4">Service Center Hours</h3>
+                  <div className="grid grid-cols-2 gap-2">
+                    <div>
+                      <p className="text-gray-300 text-sm">Monday - Friday</p>
+                      <p className="text-white">8:00 AM - 6:00 PM</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-300 text-sm">Saturday</p>
+                      <p className="text-white">9:00 AM - 4:00 PM</p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
