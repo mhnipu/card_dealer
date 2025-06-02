@@ -265,7 +265,7 @@ const Hero: React.FC = () => {
       <div ref={imageRef} className="absolute inset-0 z-10 overflow-hidden">
         {carImages.map((img, idx) => (
           <motion.div
-            key={img.url || `all-category-${idx}`}
+            key={`car-image-${idx}-${img.category}`}
             className="hero-image hero-layer-1 absolute inset-0 w-full h-full"
             initial={{ opacity: 0 }}
             animate={{ 
@@ -281,7 +281,7 @@ const Hero: React.FC = () => {
               // 2x2 collage for "All Categories"
               <div className="grid grid-cols-2 grid-rows-2 h-full w-full">
                 {collageImages.map((imgSrc, colIdx) => (
-                  <div key={`collage-${colIdx}`} className="relative overflow-hidden">
+                  <div key={`collage-${imgSrc}-${colIdx}`} className="relative overflow-hidden">
                     <img
                       src={imgSrc}
                       alt={`Featured car ${colIdx + 1}`}
@@ -571,6 +571,7 @@ const Hero: React.FC = () => {
                     src={nextImage.logo}
                     alt={nextImage.model}
                     className="w-full h-full object-contain p-2"
+                    loading="eager"
                   />
                 ) : nextImageIndex === 0 ? (
                   <div className="w-full h-full bg-white/10 flex items-center justify-center">

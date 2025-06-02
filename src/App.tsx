@@ -9,28 +9,42 @@ import Contact from './pages/Contact';
 import VehiclesPage from './pages/Vehicles';
 import ServicesPage from './pages/Services';
 import ShowroomPage from './pages/Showroom';
+import CustomCursor from './components/common/CustomCursor';
 import { ThemeProvider } from './context/ThemeContext';
 import ScrollAnimationProvider from './context/ScrollAnimationContext';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
 
 // Register GSAP plugins
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 function App() {
-  // Initialize smooth scrolling
+  // Initialize animation elements
   useEffect(() => {
-    // Add styles for improved scrolling
-    const style = document.createElement('style');
-    style.textContent = `
-      html {
-        scroll-behavior: smooth;
-      }
-    `;
-    document.head.appendChild(style);
-
+    // Apply visible class to all animate-on-mount elements with a short delay
+    const animateElements = document.querySelectorAll('.animate-on-mount');
+    
+    if (animateElements.length) {
+      // Set timeout to ensure elements are ready
+      setTimeout(() => {
+        animateElements.forEach((element) => {
+          element.classList.add('visible');
+        });
+      }, 100);
+    }
+    
+    // Apply performance optimizations
+    gsap.config({
+      nullTargetWarn: false,
+      autoSleep: 60,
+      force3D: true
+    });
+    
+    // Clean up any hanging animations on unmount
     return () => {
-      document.head.removeChild(style);
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill(false));
+      gsap.killTweensOf(window);
     };
   }, []);
 
@@ -38,9 +52,10 @@ function App() {
     <ThemeProvider>
       <ScrollAnimationProvider>
         <Router>
-          <div className="flex flex-col min-h-screen overflow-x-hidden w-full max-w-[100vw] bg-white dark:bg-black">
+          <div className="app-container gpu-accelerated">
+            <CustomCursor />
             <Navbar />
-            <main className="flex-grow">
+            <main className="main-content">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/vehicles" element={<VehiclesPage />} />

@@ -231,9 +231,9 @@ const ShowroomPage: React.FC = () => {
               <img 
                 src={image.url}
                 alt={image.title} 
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent"></div>
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-black via-black/60 to-transparent"></div>
             </motion.div>
           ))}
           
@@ -312,7 +312,7 @@ const ShowroomPage: React.FC = () => {
                   >
                     <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-extralight uppercase tracking-wide text-white mb-6 sm:mb-8">
                       {image.title}
-                    </h1>
+                </h1>
                     <p className="text-base sm:text-lg md:text-xl text-white/80 font-light leading-relaxed mb-10 sm:mb-12 max-w-2xl">
                       {image.subtitle}
                     </p>
@@ -361,8 +361,8 @@ const ShowroomPage: React.FC = () => {
         {/* Background pattern */}
         <div className="absolute inset-0 opacity-5 pointer-events-none">
           <div className="absolute top-0 left-0 w-full h-full bg-repeat" style={{ backgroundImage: 'url("https://transparenttextures.com/patterns/carbon-fibre.png")', backgroundSize: '200px' }}></div>
-        </div>
-        
+          </div>
+          
         <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-center">
             <div className="lg:col-span-5 lg:sticky lg:top-8 self-start">
@@ -410,7 +410,7 @@ const ShowroomPage: React.FC = () => {
                       <div className="w-5 h-[1px] bg-black dark:bg-white transition-all group-hover:w-8"></div>
                     </div>
                   </div>
-                </div>
+                      </div>
                 
                 {/* Feature 2 */}
                 <div className="group">
@@ -431,7 +431,7 @@ const ShowroomPage: React.FC = () => {
                       <div className="w-5 h-[1px] bg-black dark:bg-white transition-all group-hover:w-8"></div>
                     </div>
                   </div>
-                </div>
+          </div>
                 
                 {/* Feature 3 */}
                 <div className="group">
@@ -441,7 +441,7 @@ const ShowroomPage: React.FC = () => {
                       alt="Personalization Studio" 
                       className="w-full aspect-[4/3] object-cover transition-transform duration-700 group-hover:scale-105"
                     />
-                  </div>
+        </div>
                   <div className="border-l-2 border-black dark:border-white pl-6 py-2">
                     <h3 className="text-xl font-light text-black dark:text-white mb-3">Personalization Studio</h3>
                     <p className="text-gray-600 dark:text-gray-400 mb-4">
@@ -450,10 +450,10 @@ const ShowroomPage: React.FC = () => {
                     <div className="flex items-center text-black dark:text-white text-sm uppercase tracking-wider">
                       <span className="mr-2">Explore</span>
                       <div className="w-5 h-[1px] bg-black dark:bg-white transition-all group-hover:w-8"></div>
-                    </div>
-                  </div>
-                </div>
-                
+              </div>
+            </div>
+          </div>
+          
                 {/* Feature 4 */}
                 <div className="group">
                   <div className="overflow-hidden mb-6">
@@ -472,10 +472,10 @@ const ShowroomPage: React.FC = () => {
                       <span className="mr-2">Explore</span>
                       <div className="w-5 h-[1px] bg-black dark:bg-white transition-all group-hover:w-8"></div>
                     </div>
-                  </div>
-                </div>
               </div>
-              
+                </div>
+          </div>
+          
               {/* Quote */}
               <div className="mt-16 bg-gray-100 dark:bg-gray-800 p-8 relative">
                 <div className="absolute -top-5 -left-5 text-6xl text-black/10 dark:text-white/10 font-serif">"</div>
@@ -489,8 +489,8 @@ const ShowroomPage: React.FC = () => {
                       alt="Design Director" 
                       className="w-full h-full object-cover"
                     />
-                  </div>
-                  <div>
+                </div>
+                <div>
                     <p className="text-black dark:text-white font-medium">James Richardson</p>
                     <p className="text-gray-600 dark:text-gray-400 text-sm">Design Director</p>
                   </div>
@@ -520,7 +520,7 @@ const ShowroomPage: React.FC = () => {
           {[...Array(4)].map((_, i) => (
             <div key={i} className="absolute w-full border-t border-white/10" style={{ top: `${25 * (i + 1)}%` }}></div>
           ))}
-        </div>
+              </div>
         
         <div className="relative z-10 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
           <Parallax speed={0.2}>
@@ -534,7 +534,7 @@ const ShowroomPage: React.FC = () => {
                 <div className="text-white text-sm uppercase tracking-[0.3em] mb-4">Our Legacy</div>
                 <h2 className="text-4xl sm:text-5xl md:text-6xl font-extralight text-white uppercase tracking-wide">
                   Experience <br className="hidden md:block" />Our Heritage
-                </h2>
+              </h2>
               </motion.div>
             </div>
             

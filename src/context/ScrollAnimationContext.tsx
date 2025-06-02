@@ -1,15 +1,18 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { ScrollSmoother } from 'gsap/ScrollSmoother';
 
 // Register GSAP plugins
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 interface ScrollAnimationContextType {
-  // No smoother property needed
+  smoother: ScrollSmoother | null;
 }
 
-const ScrollAnimationContext = createContext<ScrollAnimationContextType>({});
+const ScrollAnimationContext = createContext<ScrollAnimationContextType>({
+  smoother: null
+});
 
 export const useScrollAnimation = () => useContext(ScrollAnimationContext);
 
@@ -18,28 +21,53 @@ interface ScrollAnimationProviderProps {
 }
 
 export const ScrollAnimationProvider: React.FC<ScrollAnimationProviderProps> = ({ children }) => {
+  const [smoother, setSmoother] = useState<ScrollSmoother | null>(null);
+  const smoothWrapperRef = useRef<HTMLDivElement>(null);
+  const smoothContentRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
-    // Refresh ScrollTrigger when all images are loaded
-    window.addEventListener('load', () => {
-      ScrollTrigger.refresh();
-    });
+    // Create ScrollSmoother
+    if (smoothWrapperRef.current && smoothContentRef.current) {
+      const smootherInstance = ScrollSmoother.create({
+        wrapper: smoothWrapperRef.current,
+        content: smoothContentRef.current,
+        smooth: 1.5, // Adjust the smooth scrolling speed (higher = slower)
+        effects: true,
+        normalizeScroll: true,
+        ignoreMobileResize: true
+      });
 
-    // Refresh on resize
-    window.addEventListener('resize', () => {
-      ScrollTrigger.refresh();
-    });
+      setSmoother(smootherInstance);
 
-    // Cleanup on unmount
-    return () => {
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-      window.removeEventListener('load', () => ScrollTrigger.refresh());
-      window.removeEventListener('resize', () => ScrollTrigger.refresh());
-    };
+      // Refresh ScrollTrigger when all images are loaded
+      window.addEventListener('load', () => {
+        ScrollTrigger.refresh();
+        smootherInstance.refresh();
+      });
+
+      // Refresh on resize
+      window.addEventListener('resize', () => {
+        ScrollTrigger.refresh();
+        smootherInstance.refresh();
+      });
+
+      // Cleanup on unmount
+      return () => {
+        smootherInstance.kill();
+        ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+        window.removeEventListener('load', () => ScrollTrigger.refresh());
+        window.removeEventListener('resize', () => ScrollTrigger.refresh());
+      };
+    }
   }, []);
 
   return (
-    <ScrollAnimationContext.Provider value={{}}>
-      {children}
+    <ScrollAnimationContext.Provider value={{ smoother }}>
+      <div ref={smoothWrapperRef} id="smooth-wrapper" className="smooth-wrapper">
+        <div ref={smoothContentRef} id="smooth-content" className="smooth-content">
+          {children}
+        </div>
+      </div>
     </ScrollAnimationContext.Provider>
   );
 };
@@ -57,22 +85,29 @@ export const Parallax: React.FC<ParallaxProps> = ({
   className = ''
 }) => {
   const parallaxRef = useRef<HTMLDivElement>(null);
+  const { smoother } = useScrollAnimation();
 
   useEffect(() => {
     const element = parallaxRef.current;
     if (!element) return;
 
-    gsap.to(element, {
-      y: () => (window.innerHeight * speed * -1),
-      ease: "none",
-      scrollTrigger: {
-        trigger: element,
-        start: "top bottom",
-        end: "bottom top",
-        scrub: true
-      }
-    });
-  }, [speed]);
+    // Use smoother effects if smoother is available
+    if (smoother) {
+      smoother.effects(element, { speed });
+    } else {
+      // Fallback to regular GSAP parallax
+      gsap.to(element, {
+        y: () => (window.innerHeight * speed * -1),
+        ease: "none",
+        scrollTrigger: {
+          trigger: element,
+          start: "top bottom",
+          end: "bottom top",
+          scrub: true
+        }
+      });
+    }
+  }, [speed, smoother]);
 
   return (
     <div ref={parallaxRef} className={`parallax-element ${className}`} data-speed={speed}>

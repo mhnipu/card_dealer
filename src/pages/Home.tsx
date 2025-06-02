@@ -5,17 +5,18 @@ import CategoryGrid from '../components/home/CategoryGrid';
 import FeatureShowcase from '../components/home/FeatureShowcase';
 import ContactForm from '../components/common/ContactForm';
 import { motion } from 'framer-motion';
-import { MapPin, Phone, Mail, Star, ArrowRight } from 'lucide-react';
+import { MapPin, Phone, Mail, Star, ArrowRight, MousePointer, ChevronDown } from 'lucide-react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useGSAP } from '@gsap/react';
-import { ScrollReveal, Parallax } from '../context/ScrollAnimationContext';
-import { useScrollAnimation } from '../utils/animations';
+import { ScrollReveal, Parallax, useScrollAnimation } from '../context/ScrollAnimationContext';
+import { useRevealAnimation } from '../utils/animations';
 
 gsap.registerPlugin(ScrollTrigger);
 
 const Home: React.FC = () => {
   const homeRef = useRef<HTMLDivElement>(null);
+  const { smoother } = useScrollAnimation();
   
   useEffect(() => {
     document.title = 'Prestige Auto | Luxury Car Dealership';
@@ -44,13 +45,74 @@ const Home: React.FC = () => {
         }
       );
     });
+
+    // Create a scroll indicator animation
+    const scrollIndicator = homeRef.current.querySelector('.scroll-indicator');
+    if (scrollIndicator) {
+      gsap.to(scrollIndicator, {
+        y: 15,
+        opacity: 0.2,
+        repeat: -1,
+        duration: 1.5,
+        yoyo: true,
+        ease: "power2.inOut"
+      });
+    }
   }, []);
+
+  const handleSmoothScroll = () => {
+    if (smoother) {
+      smoother.scrollTo('#featured-section', true, 'top top');
+    } else {
+      // Fallback for regular scrolling
+      const section = document.getElementById('featured-section');
+      section?.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
 
   return (
     <div ref={homeRef} className="min-h-screen">
       <Hero />
-      <FeaturedSlider />
+
+      {/* Scroll indicator below hero */}
+      <div className="flex flex-col items-center justify-center h-24 relative">
+        <button 
+          onClick={handleSmoothScroll}
+          className="flex flex-col items-center gap-2 text-gray-400 hover:text-black dark:hover:text-white transition-colors cursor-pointer group"
+        >
+          <span className="text-xs uppercase tracking-widest">Explore</span>
+          <div className="scroll-indicator relative">
+            <ChevronDown className="w-5 h-5 animate-pulse" />
+          </div>
+        </button>
+      </div>
+
+      <div id="featured-section">
+        <FeaturedSlider />
+      </div>
+      
+      {/* Transition element */}
+      <div className="py-8 sm:py-12 overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-nowrap whitespace-nowrap overflow-hidden opacity-10 dark:opacity-5">
+            <div className="animate-marquee flex space-x-4 ml-[-20px]">
+              {Array(10).fill('LUXURY PERFORMANCE INNOVATION').map((text, i) => (
+                <span key={i} className="text-5xl sm:text-6xl md:text-7xl font-bold uppercase">{text}</span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <CategoryGrid />
+      
+      {/* Divider element */}
+      <div className="relative h-24 sm:h-32 md:h-40 overflow-hidden mx-auto">
+        <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-full sm:w-4/5 max-w-3xl">
+          <div className="h-px bg-gradient-to-r from-transparent via-black dark:via-white to-transparent"></div>
+        </div>
+      </div>
+
       <FeatureShowcase />
       <TestimonialSection />
       <ContactSection />
@@ -82,66 +144,28 @@ const TestimonialSection: React.FC = () => {
     }
   ];
 
-  useGSAP(() => {
-    if (!sectionRef.current) return;
-    
-    // Animate the heading with a special effect
-    const heading = sectionRef.current.querySelector('h2');
-    if (heading) {
-      gsap.fromTo(
-        heading,
-        { opacity: 0, y: 30 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          scrollTrigger: {
-            trigger: heading,
-            start: 'top 80%',
-            toggleActions: 'play none none none'
-          }
-        }
-      );
-    }
-    
-    // Animate testimonial cards with stagger
-    const cards = sectionRef.current.querySelectorAll('.testimonial-card');
-    gsap.fromTo(
-      cards,
-      { opacity: 0, y: 50 },
-      {
-        opacity: 1,
-        y: 0,
-        stagger: 0.2,
-        duration: 0.8,
-        ease: 'power2.out',
-        scrollTrigger: {
-          trigger: cards[0],
-          start: 'top 80%',
-          toggleActions: 'play none none none'
-        }
-      }
-    );
-  }, []);
+  useRevealAnimation(sectionRef);
 
   return (
     <section ref={sectionRef} className="py-24 md:py-32 bg-white dark:bg-black text-black dark:text-white">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative">
-        {/* Subtle overlays */}
-        <div className="absolute inset-0 opacity-10 overflow-hidden">
+        {/* Decorative elements */}
+        <div className="absolute inset-0 opacity-10 overflow-hidden pointer-events-none">
           <div className="absolute top-0 right-[10%] w-[1px] h-[70%] bg-black dark:bg-white"></div>
           <div className="absolute bottom-0 left-[20%] w-[1px] h-[40%] bg-black dark:bg-white"></div>
+          <div className="absolute top-[30%] left-[5%] w-24 h-24 border border-black dark:border-white rounded-full opacity-20"></div>
+          <div className="absolute bottom-[20%] right-[15%] w-40 h-40 border border-black dark:border-white opacity-10"></div>
         </div>
         
         <ScrollReveal animation="fadeUp">
           <div className="text-left mb-16 md:mb-20">
             <div className="flex items-center gap-2 mb-2">
               <span className="inline-block w-1 h-6 sm:h-8 bg-black dark:bg-white"></span>
-              <h2 className="text-2xl sm:text-3xl font-light text-black dark:text-white uppercase tracking-wider">
+              <h2 className="text-2xl sm:text-3xl font-light text-black dark:text-white uppercase tracking-wider reveal-title">
                 Client Testimonials
               </h2>
             </div>
-            <p className="text-gray-600 dark:text-gray-400 uppercase tracking-wider text-xs sm:text-sm ml-9">
+            <p className="text-gray-600 dark:text-gray-400 uppercase tracking-wider text-xs sm:text-sm ml-9 reveal-text">
               Discover what our clients have to say about us
             </p>
           </div>
@@ -153,7 +177,7 @@ const TestimonialSection: React.FC = () => {
               key={index}
               animation="fadeUp"
               delay={index * 0.1}
-              className="testimonial-card bg-white dark:bg-black border border-gray-200 dark:border-gray-800 p-6 sm:p-8 h-full flex flex-col hover:border-gray-400 dark:hover:border-white/50 transition-colors"
+              className="testimonial-card bg-white dark:bg-black border border-gray-200 dark:border-gray-800 p-6 sm:p-8 h-full flex flex-col hover:border-gray-400 dark:hover:border-white/50 transition-colors reveal-card group"
             >
               <div className="mb-6 flex space-x-1">
                 {[...Array(5)].map((_, i) => (
@@ -163,12 +187,14 @@ const TestimonialSection: React.FC = () => {
               
               <p className="text-gray-700 dark:text-gray-300 font-light text-base leading-relaxed mb-8">"{testimonial.text}"</p>
               
-              <div className="mt-auto flex items-center pt-6 border-t border-gray-200 dark:border-gray-800">
-                <img 
-                  src={testimonial.image} 
-                  alt={testimonial.name} 
-                  className="w-12 h-12 rounded-full object-cover mr-4"
-                />
+              <div className="mt-auto flex items-center pt-6 border-t border-gray-200 dark:border-gray-800 group-hover:border-gray-400 dark:group-hover:border-gray-600 transition-colors">
+                <div className="w-12 h-12 rounded-full overflow-hidden mr-4 ring-2 ring-transparent group-hover:ring-black dark:group-hover:ring-white transition-all">
+                  <img 
+                    src={testimonial.image} 
+                    alt={testimonial.name} 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
                 <div>
                   <h3 className="text-base font-light text-black dark:text-white">{testimonial.name}</h3>
                   <p className="text-gray-500 text-xs uppercase tracking-wider">{testimonial.position}</p>
@@ -185,255 +211,154 @@ const TestimonialSection: React.FC = () => {
 const ContactSection: React.FC = () => {
   const sectionRef = useRef<HTMLElement>(null);
   
-  useGSAP(() => {
+  // Use eager loading instead of scroll-triggered animations
+  useEffect(() => {
     if (!sectionRef.current) return;
     
-    // Animate the contact form with a slide-in effect
-    const form = sectionRef.current.querySelector('form');
-    if (form) {
-      gsap.fromTo(
-        form,
-        { opacity: 0, x: 50 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.8,
-          scrollTrigger: {
-            trigger: form,
-            start: 'top 80%',
-            toggleActions: 'play none none none'
-          }
-        }
-      );
-    }
+    // Log the section to debug
+    console.log("ContactSection mounted, ref:", sectionRef.current);
     
-    // Animate the dealership info
-    const dealerInfo = sectionRef.current.querySelector('.dealer-info');
-    if (dealerInfo) {
-      gsap.fromTo(
-        dealerInfo,
-        { opacity: 0, x: -50 },
-        {
-          opacity: 1,
-          x: 0,
-          duration: 0.8,
-          scrollTrigger: {
-            trigger: dealerInfo,
-            start: 'top 80%',
-            toggleActions: 'play none none none'
-          }
-        }
-      );
-    }
+    // Pre-load form elements with no delay - use specific class names to target elements
+    const formElements = sectionRef.current.querySelectorAll('.form-element');
+    const titleElements = sectionRef.current.querySelectorAll('.section-title');
+    const contactInfo = sectionRef.current.querySelectorAll('.contact-info');
     
-    // Animate form fields with stagger
-    const fields = form?.querySelectorAll('input, select, textarea');
-    if (fields) {
-      gsap.fromTo(
-        fields,
-        { opacity: 0, y: 20 },
-        {
+    // Handle each group separately for better control
+    [formElements, titleElements, contactInfo].forEach(elements => {
+      if (elements && elements.length > 0) {
+        gsap.to(Array.from(elements), {
           opacity: 1,
           y: 0,
-          stagger: 0.1,
           duration: 0.5,
-          scrollTrigger: {
-            trigger: form,
-            start: 'top 80%',
-            toggleActions: 'play none none none'
-          }
-        }
-      );
-    }
+          stagger: 0.1,
+          delay: 0.2
+        });
+      }
+    });
   }, []);
 
   return (
-    <section ref={sectionRef} className="py-24 md:py-32 bg-gray-50 dark:bg-black text-black dark:text-white relative">
-      {/* Subtle overlays */}
-      <div className="absolute inset-0 opacity-10 overflow-hidden">
-        <div className="absolute top-0 right-[20%] w-[1px] h-[60%] bg-black dark:bg-white"></div>
-        <div className="absolute bottom-0 left-[15%] w-[1px] h-[50%] bg-black dark:bg-white"></div>
+    <section ref={sectionRef} className="py-24 md:py-32 bg-white dark:bg-black relative overflow-hidden">
+      {/* Background decorative elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none opacity-5 dark:opacity-10">
+        <div className="absolute top-[20%] left-[10%] w-[500px] h-[500px] border border-black dark:border-white rounded-full"></div>
+        <div className="absolute bottom-[10%] right-[5%] w-[300px] h-[300px] border border-black dark:border-white"></div>
+        <div className="absolute top-[40%] right-[20%] w-[200px] h-[200px] border border-black dark:border-white rotate-45"></div>
       </div>
       
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <ScrollReveal animation="fadeUp">
-          <div className="text-left mb-16 md:mb-20">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="inline-block w-1 h-6 sm:h-8 bg-black dark:bg-white"></span>
-              <h2 className="text-2xl sm:text-3xl font-light text-black dark:text-white uppercase tracking-wider">
-                Contact Us
-              </h2>
-            </div>
-            <p className="text-gray-600 dark:text-gray-400 uppercase tracking-wider text-xs sm:text-sm ml-9">
-              Our specialists are ready to assist you
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div className="text-center mb-16 md:mb-24">
+          <div className="section-title flex flex-col items-center justify-center">
+            <div className="w-[1px] h-12 bg-black dark:bg-white mb-6"></div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-light text-black dark:text-white uppercase tracking-wider mb-6">
+              Contact Experience
+            </h2>
+            <div className="w-24 h-[1px] bg-gradient-to-r from-black/30 dark:from-white/30 via-black/80 dark:via-white/80 to-black/30 dark:to-white/30 mb-6"></div>
+            <p className="text-gray-600 dark:text-gray-400 uppercase tracking-wider text-xs sm:text-sm max-w-xl mx-auto">
+              Connect with our luxury vehicle specialists for a personalized consultation tailored to your preferences
             </p>
           </div>
-        </ScrollReveal>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start">
-          <ScrollReveal 
-            animation="fadeLeft"
-            className="dealer-info flex flex-col space-y-10"
-          >
-            <div>
-              <h3 className="text-xl font-light text-black dark:text-white mb-6 uppercase tracking-wide">Dealership information</h3>
-              
-              <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 p-6 sm:p-8 mb-10 hover:border-gray-400 dark:hover:border-white/50 transition-colors">
-                <h4 className="text-base font-light text-black dark:text-white mb-6 uppercase tracking-wide">Hours of operation</h4>
-                <div className="space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-400 text-sm">Monday - Friday</span>
-                    <span className="text-black dark:text-white">9:00 AM - 8:00 PM</span>
+        </div>
+      
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
+          <div className="dealer-info">
+            {/* Contact information cards with luxury styling */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+              <div className="contact-info p-6 border border-gray-100 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 transition-colors group">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 border border-gray-200 dark:border-gray-700 group-hover:border-black dark:group-hover:border-white transition-colors">
+                    <MapPin className="w-6 h-6 text-black dark:text-white" />
                   </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-400 text-sm">Saturday</span>
-                    <span className="text-black dark:text-white">10:00 AM - 7:00 PM</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-gray-600 dark:text-gray-400 text-sm">Sunday</span>
-                    <span className="text-black dark:text-white">11:00 AM - 5:00 PM</span>
+                  <div>
+                    <h3 className="font-medium text-black dark:text-white text-lg mb-2">Visit Our Showroom</h3>
+                    <p className="text-gray-600 dark:text-gray-400">123 Luxury Lane, Beverly Hills, CA 90210</p>
                   </div>
                 </div>
+              </div>
+              
+              <div className="contact-info p-6 border border-gray-100 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 transition-colors group">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 border border-gray-200 dark:border-gray-700 group-hover:border-black dark:group-hover:border-white transition-colors">
+                    <Phone className="w-6 h-6 text-black dark:text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-black dark:text-white text-lg mb-2">Contact Number</h3>
+                    <p className="text-gray-600 dark:text-gray-400">+1 (310) 555-1234</p>
+                    <p className="text-gray-500 dark:text-gray-500 text-sm mt-1">Premium customer support</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="contact-info p-6 border border-gray-100 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 transition-colors group">
+                <div className="flex items-start gap-4">
+                  <div className="p-3 border border-gray-200 dark:border-gray-700 group-hover:border-black dark:group-hover:border-white transition-colors">
+                    <Mail className="w-6 h-6 text-black dark:text-white" />
+                  </div>
+                  <div>
+                    <h3 className="font-medium text-black dark:text-white text-lg mb-2">Email Address</h3>
+                    <p className="text-gray-600 dark:text-gray-400">info@prestigeauto.com</p>
+                    <p className="text-gray-500 dark:text-gray-500 text-sm mt-1">24/7 online support</p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="contact-info p-6 border border-gray-100 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 transition-colors">
+                <div className="flex flex-col">
+                  <h3 className="font-medium text-black dark:text-white text-lg mb-3">Hours of Operation</h3>
+                  <div className="space-y-2 text-sm">
+                    <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-800">
+                      <span className="text-gray-600 dark:text-gray-400">Monday - Friday</span>
+                      <span className="text-black dark:text-white font-light">9:00 AM - 8:00 PM</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-800">
+                      <span className="text-gray-600 dark:text-gray-400">Saturday</span>
+                      <span className="text-black dark:text-white font-light">10:00 AM - 6:00 PM</span>
+                    </div>
+                    <div className="flex justify-between items-center py-2">
+                      <span className="text-gray-600 dark:text-gray-400">Sunday</span>
+                      <span className="text-black dark:text-white font-light">11:00 AM - 5:00 PM</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Map or location showcase */}
+            <div className="contact-info relative h-[240px] overflow-hidden mt-10 border border-gray-100 dark:border-gray-800">
+              <div className="absolute inset-0 bg-gradient-to-br from-gray-100 to-gray-200 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center">
+                <div className="text-center px-6">
+                  <h4 className="text-lg font-light mb-4 text-black dark:text-white">Premium Showroom Location</h4>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">Visit our luxury showroom in the heart of Beverly Hills</p>
+                  <button className="px-6 py-2 border border-black dark:border-white text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-all text-xs tracking-wider uppercase">
+                    View Map
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div className="relative">
+            {/* Decorative elements for the form */}
+            <div className="absolute -top-10 -left-10 w-20 h-20 border-t border-l border-gray-200 dark:border-gray-800 hidden lg:block"></div>
+            <div className="absolute -bottom-10 -right-10 w-20 h-20 border-b border-r border-gray-200 dark:border-gray-800 hidden lg:block"></div>
+            
+            <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 p-8 lg:p-12 relative z-10">
+              <div className="form-element">
+                <ContactForm />
               </div>
             </div>
             
-            <div className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 p-6 sm:p-8 flex flex-col space-y-8 hover:border-gray-400 dark:hover:border-white/50 transition-colors">
-              <div className="flex items-start">
-                <div className="w-10 h-10 border border-gray-300 dark:border-white/30 flex items-center justify-center mr-4">
-                  <Phone className="w-4 h-4 text-black dark:text-white" />
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Telephone</p>
-                  <p className="text-black dark:text-white">+1 (800) 555-0123</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start">
-                <div className="w-10 h-10 border border-gray-300 dark:border-white/30 flex items-center justify-center mr-4">
-                  <Mail className="w-4 h-4 text-black dark:text-white" />
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Email</p>
-                  <p className="text-black dark:text-white">info@prestigeauto.com</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start">
-                <div className="w-10 h-10 border border-gray-300 dark:border-white/30 flex items-center justify-center mr-4">
-                  <MapPin className="w-4 h-4 text-black dark:text-white" />
-                </div>
-                <div>
-                  <p className="text-xs text-gray-500 uppercase tracking-wider mb-1">Location</p>
-                  <p className="text-black dark:text-white">123 Luxury Lane, Beverly Hills, CA 90210</p>
-                </div>
-              </div>
-              
-              <div className="pt-4 mt-4 border-t border-gray-200 dark:border-gray-800">
-                <a 
-                  href="https://maps.google.com" 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center text-sm text-black dark:text-white hover:opacity-70 transition-opacity uppercase tracking-wider"
-                >
-                  View on map
-                  <ArrowRight size={16} className="ml-2" />
-                </a>
-              </div>
-            </div>
-          </ScrollReveal>
-          
-          <ScrollReveal
-            animation="fadeRight"
-            className="bg-white dark:bg-black border border-gray-200 dark:border-gray-800 p-6 sm:p-8 hover:border-gray-400 dark:hover:border-white/50 transition-colors"
-          >
-            <h3 className="text-xl font-light text-black dark:text-white mb-8 uppercase tracking-wide">Send a message</h3>
-            <form>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                <div>
-                  <label htmlFor="firstName" className="block text-xs uppercase tracking-wider text-gray-500 mb-2">
-                    First Name
-                  </label>
-                  <input
-                    type="text"
-                    id="firstName"
-                    className="w-full px-0 py-2 bg-transparent border-0 border-b border-gray-200 dark:border-gray-800 focus:ring-0 focus:border-black dark:focus:border-white text-black dark:text-white"
-                    placeholder="Enter your first name"
-                  />
-                </div>
-                <div>
-                  <label htmlFor="lastName" className="block text-xs uppercase tracking-wider text-gray-500 mb-2">
-                    Last Name
-                  </label>
-                  <input
-                    type="text"
-                    id="lastName"
-                    className="w-full px-0 py-2 bg-transparent border-0 border-b border-gray-200 dark:border-gray-800 focus:ring-0 focus:border-black dark:focus:border-white text-black dark:text-white"
-                    placeholder="Enter your last name"
-                  />
-                </div>
-              </div>
-              
-              <div className="mb-6">
-                <label htmlFor="email" className="block text-xs uppercase tracking-wider text-gray-500 mb-2">
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  className="w-full px-0 py-2 bg-transparent border-0 border-b border-gray-200 dark:border-gray-800 focus:ring-0 focus:border-black dark:focus:border-white text-black dark:text-white"
-                  placeholder="Enter your email address"
-                />
-              </div>
-              
-              <div className="mb-6">
-                <label htmlFor="phone" className="block text-xs uppercase tracking-wider text-gray-500 mb-2">
-                  Phone
-                </label>
-                <input
-                  type="tel"
-                  id="phone"
-                  className="w-full px-0 py-2 bg-transparent border-0 border-b border-gray-200 dark:border-gray-800 focus:ring-0 focus:border-black dark:focus:border-white text-black dark:text-white"
-                  placeholder="Enter your phone number"
-                />
-              </div>
-              
-              <div className="mb-6">
-                <label htmlFor="interest" className="block text-xs uppercase tracking-wider text-gray-500 mb-2">
-                  I'm interested in
-                </label>
-                <select
-                  id="interest"
-                  className="w-full px-0 py-2 bg-transparent border-0 border-b border-gray-200 dark:border-gray-800 focus:ring-0 focus:border-black dark:focus:border-white text-black dark:text-white"
-                >
-                  <option value="">Select an option</option>
-                  <option value="new">New Vehicle Purchase</option>
-                  <option value="certified">Certified Pre-Owned</option>
-                  <option value="test-drive">Schedule a Test Drive</option>
-                  <option value="service">Service & Maintenance</option>
-                  <option value="other">Other Inquiries</option>
-                </select>
-              </div>
-              
-              <div className="mb-8">
-                <label htmlFor="message" className="block text-xs uppercase tracking-wider text-gray-500 mb-2">
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  rows={4}
-                  className="w-full px-0 py-2 bg-transparent border-0 border-b border-gray-200 dark:border-gray-800 focus:ring-0 focus:border-black dark:focus:border-white text-black dark:text-white"
-                  placeholder="How can we help you?"
-                ></textarea>
-              </div>
-              
-              <button
-                type="submit"
-                className="px-6 sm:px-8 py-2 sm:py-3 border border-black dark:border-white text-black dark:text-white uppercase tracking-wider text-xs sm:text-sm transition-all hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black font-light"
-              >
-                Submit
-              </button>
-            </form>
-          </ScrollReveal>
+            {/* Corner accent */}
+            <div className="absolute top-0 right-0 w-0 h-0 border-t-[80px] border-r-[80px] border-t-transparent border-r-gray-100 dark:border-r-gray-800 -mt-1 -mr-1 hidden lg:block"></div>
+          </div>
+        </div>
+      </div>
+
+      {/* Bottom decorative elements */}
+      <div className="mt-32 max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <div className="h-px bg-gradient-to-r from-transparent via-black/20 dark:via-white/20 to-transparent"></div>
+        <div className="h-16 flex justify-center items-center">
+          <p className="text-xs text-center text-gray-500 dark:text-gray-400 tracking-wider font-light">© {new Date().getFullYear()} Prestige Auto. Luxury Redefined.</p>
         </div>
       </div>
     </section>
